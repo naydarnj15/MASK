@@ -213,6 +213,7 @@ function GameEngine() {
     this.wheel = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
+    this.speed = null;
 }
 
 GameEngine.prototype.init = function (ctx) {
@@ -232,7 +233,11 @@ GameEngine.prototype.start = function () {
         requestAnimFrame(gameLoop, that.ctx.canvas);
     })();
 }
-
+var x = 0;
+var y = 0;
+var speed = 5;
+var angle = 0;
+var mod = 0;
 GameEngine.prototype.startInput = function () {
     console.log('Starting input');
     var that = this;
@@ -240,16 +245,16 @@ GameEngine.prototype.startInput = function () {
     this.ctx.canvas.addEventListener("keydown", function (e) {
         if (e.code === "KeyD" || e.code === "ArrowRight") {
             that.d = true;
-            
+            angle += 5;
         } else if (e.code === "KeyS" || e.code === "ArrowDown") {
             that.s = true;
-            
+            mod = -1;
         } else if (e.code === "KeyA" || e.code === "ArrowLeft") {
             that.a = true;
-            
+            angle -= 5;
         } else if (e.code === "KeyW" || e.code === "ArrowUp") {
             that.w = true;
-            
+            mod = 1;
         }
         //        console.log(e);
         e.preventDefault();
@@ -263,10 +268,12 @@ GameEngine.prototype.startInput = function () {
                  that.d = false;
              } else if (e.code === "KeyS"||e.code === "ArrowDown"){
                  that.s = false;
+                 mod = 0;
              } else if (e.code === "KeyA"||e.code === "ArrowLeft"){
                  that.a = false;
              } else if (e.code === "KeyW"||e.code === "ArrowUp"){
                  that.w = false;
+                 mod = 0;
              }
      //        console.log(e);
              e.preventDefault();
@@ -312,7 +319,12 @@ GameEngine.prototype.loop = function () {
     this.clockTick = this.timer.tick();
     this.update();
     this.draw();
-    
+    this.space = null;
+    this.d = null;
+    this.s = null;
+    this.a = null;
+    this.w = null;
+    this.speed = 0;
 }
 
 function Entity(game, x, y) {
