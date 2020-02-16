@@ -129,10 +129,10 @@ Background.prototype.draw = function () {
 
 
 
-    //  this.ctx.drawImage(tile.img, this.distanceTraveledX - 635, this.distanceTraveledY - 150, 1250, 570, 0,0, 1250, 570 )
+      this.ctx.drawImage(tile.img, this.distanceTraveledX - 635, this.distanceTraveledY - 150, 1250, 570, 0,0, 1250, 570 )
 
     // (tile.img, Source x, source Y,  source width, source height, 0connect , 0connect, resizing w 1250, h 510);
-       this.ctx.drawImage(tile.img, 0, 0); // 1250, 570 
+    //    this.ctx.drawImage(tile.img, 0, 0); // 1250, 570 
 
 };
 Background.prototype.update = function () {
@@ -194,25 +194,50 @@ function Car(game,x,y) {
     // this.currentTile.src = "./img/5.jpg";                                                                    
     this.tile = 5;
 
+    // this.x = 0;
+    // this.y = 0;
+    // this.speed = 0;
+    // this.maxSpeed = 20;
+    // this.minSpeed = 1;
+
+    // this.angle = 0;
+    // this.mod = 0;
+    // this.car = new Image();
+    // this.car.src = "./img/CarRight.png";
+
+    // this.drag =0.95;
+    // this.angularDrag =0.95;
+    // this.turnSpeed=0.002;
+    // this.collide =0;
+    // this.radius = 100;
+    // this.ground = 400;
+    // this.prevX = 0;
+    // this.prevY =  400;
+
+
+    // this.game =game;
+    // this.currentTile = new Image();
+    // this.currentTile.src = "./img/5.jpg";                                                                    
+    // this.tile = 5;
     this.x = 0;
     this.y = 0;
     this.speed = 0;
-    this.maxSpeed = 20;
-    this.minSpeed = 1;
-
+    this.maxSpeed = 7;
+    this.minSpeed = -7;
     this.angle = 0;
     this.mod = 0;
     this.car = new Image();
     this.car.src = "./img/CarRight.png";
-
-    this.drag =0.95;
-    this.angularDrag =0.95;
-    this.turnSpeed=0.002;
-    this.collide =0;
+    this.jumping = false;
+    this.left = false;
+    this.right = false;
+    this.down = false;
+    this.up = false;
     this.radius = 100;
     this.ground = 400;
     this.prevX = 0;
     this.prevY =  400;
+    this.collide =0;
 
     // this.maxPower =2;
     // this.maxReverse = 1;
@@ -250,39 +275,78 @@ Car.prototype.constructor = Car;
 //     return this.y;
 // };
 Car.prototype.update = function () {
-
-    if (this.game.d && this.speed > 0) {
-       
-        if(this.speed > 0){
-            this.angle += 5;
-        } else{
-            this.angle -= 5;
+    
+    if (this.game.w) {
+        if (this.speed < this.maxSpeed) {
+            this.speed += 2;
         }
-        this.left = true;
-        //ctx.drawImage(this.car, this.x, this.y);
-        //this.ctx.rotateAndCache(this.car, this.angle);
-    } else if (this.game.s) {
-        //this.mod = 0;
+    } 
+
+    else if (this.game.s) {
         if (this.speed > this.minSpeed) {
             this.speed -= 2;
         }
-        this.down = true;
-
-    } else if (this.game.a ) {
+        
+    } 
+    if (this.game.d ) {
+        if(this.speed !==0){
         if(this.speed > 0){
-            this.angle -= 5;
+            this.angle += 3;
         } else{
-            this.angle += 5;
-        }
-        this.right = true;
-    } else if (this.game.w) {
-        if (this.speed < this.maxSpeed) {
-            this.speed += 1;
-        }
-        this.up = true;
-        this.mod = 1;
-    } else {
+            this.angle -= 3;
     }
+}
+    } 
+    
+    else if (this.game.a) {
+        if(this.speed !==0){
+         
+        if(this.speed > 0){
+            this.angle -= 3;
+        }else{
+            this.angle += 3;
+    }
+}
+      //this.speed +=1;  
+    } 
+
+    if(this.speed>0) this.speed-=1;
+    if(this.speed<0) this.speed+=1;
+
+
+//  if (this.game.w) {
+//     if (this.speed < this.maxSpeed) {
+//         this.speed += 1;
+//     }
+//     this.up = true;
+//     this.mod = 1;
+// }  else if (this.game.s) {
+//         //this.mod = 0;
+//         if (this.speed > this.minSpeed) {
+//             this.speed -= 2;
+//         }
+//         this.down = true;
+
+//     } 
+//     if (this.game.d && this.speed > 0) {
+       
+//         if(this.speed > 0){
+//             this.angle += 5;
+//         } else{
+//             this.angle -= 5;
+//         }
+//         this.left = true;
+//         //ctx.drawImage(this.car, this.x, this.y);
+//         //this.ctx.rotateAndCache(this.car, this.angle);
+//     }
+//     else if (this.game.a ) {
+//         if(this.speed > 0){
+//             this.angle -= 5;
+//         } else{
+//             this.angle += 5;
+//         }
+//         this.right = true;
+//     } 
     // if (this.y > 911) {
     //     this.currentTile.src = "./img/4.png";
     //     this.tile = 4;
@@ -297,10 +361,28 @@ Car.prototype.update = function () {
 }
 
 Car.prototype.draw = function (ctx) {
+    // if (canDrive(this.x, this.y, this.tile)) {
+    //     this.prevX = this.x;
+    //     this.prevY = this.y;
+    //     this.x += (this.speed) * Math.cos(Math.PI / 180 * this.angle);
+    //     this.y += (this.speed) * Math.sin(Math.PI / 180 * this.angle);
+    // } else {
+    //     this.collide +=1;
+    //     this.x = this.prevX;
+    //     this.y = this.prevY; 
+    // }
+    // ctx.save();
+    // ctx.translate(this.x, this.y);
+    // ctx.rotate(Math.PI / 180 * this.angle);
+    // ctx.drawImage(this.car, -(this.car.width / 2), -(this.car.height / 2));
+    // ctx.restore();
     
+    // Entity.prototype.draw.call(this);
+
+
     if (canDrive(this.x, this.y, this.tile)) {
-        var travelX = (this.speed * this.mod) * Math.cos(Math.PI / 180 * this.angle); //********* */
-        var travelY = (this.speed * this.mod) * Math.sin(Math.PI / 180 * this.angle);
+        var travelX = (this.speed ) * Math.cos(Math.PI / 180 * this.angle); //********* */
+        var travelY = (this.speed ) * Math.sin(Math.PI / 180 * this.angle);
         this.prevX = this.x;
         this.prevY = this.y;
         this.x += travelX;
@@ -315,7 +397,7 @@ Car.prototype.draw = function (ctx) {
     } else {
         this.x = this.prevX;
         this.y = this.prevY;
-        this.speed =0;
+        this.speed =22;
         this.collide +=1; 
         this.game.Background.distanceTraveledX -= this.x - this.prevX; //*****
         this.game.Background.distanceTraveledY -= this.y - this.prevY; //*****
