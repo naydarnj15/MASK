@@ -1,0 +1,6 @@
+ class Vehicle{
+     constructor(){
+         
+     }
+
+ }
