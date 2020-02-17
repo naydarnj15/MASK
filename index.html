@@ -23,17 +23,26 @@
     div>Right click and "Inspect Element".  Select the Console Tab to see the debugger output.</div>
     <div style="position: absolute; left: 15px; top: 30px; width: 400px; height: 0px; background-color: rgba(0, 0, 0, 0); font-family: Impact, Charcoal, sans-serif; font-size: 18pt; color: white; ">
             Use Arrows key to move the car
-
-
-
     </div>
-    <div id="collision" style="position: absolute; left: 1160px; top: 30px; width: 100px; height: 30px; background-color: rgba(0,0,0,0); font-family: Impact, Charcoal, sans-serif; font-size: 16pt; color:White ; ">
+
+    <div id="collide" style="position: absolute; left: 1160px; top: 30px; width: 100px; height: 30px; background-color: rgba(0,0,0,0); font-family: Impact, Charcoal, sans-serif; font-size: 16pt; color:White ; ">
         Collision: 0
     </div>
+
     <div id="speed" style="position: absolute; left: 1160px; top: 55px; width: 100px; height: 30px; background-color: rgba(0,0,0,0); font-family: Impact, Charcoal, sans-serif; font-size: 16pt; color:White ; ">
-        Speed:     0
+        Speed: 0
     </div>
     <canvas id="gameWorld" tabindex="0" width="1250" height="570" style="border: 1px solid black; background: black"></canvas>
+    <audio id="start">   
+        <source src="./sound/start.mp3" /></audio>   
+    <audio id="drift">   
+        <source src="./sound/drift.mp3" /> </audio>
+    <audio id="honk">   
+        <source src="./sound/honk.mp3" /></audio>   
+    <audio id="crash">   
+        <source src="./sound/crash.mp3" /></audio>
+    <audio id="siren">   
+        <source src="./sound/siren.mp3" />  </audio>
 </p>
 </body>
 </html>

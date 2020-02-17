@@ -238,28 +238,8 @@ function Car(game,x,y) {
     this.prevX = 0;
     this.prevY =  400;
     this.collide =0;
-
-    // this.maxPower =2;
-    // this.maxReverse = 1;
-    // this.powerFactor = 0.1;
-    // this.reverseFactor = 0.05;
-
-    // this.drag =0.95;
-    // this.angularDrag =0.95;
-    // this.turnSpeed=0.002;
-
-
-    // this.positionX = 100;
-    // this.positionY = 400;
-    // this.velocityX=0;
-    // this.velocityY=0;
-    // this.power =0;
-    // this.reverse =0;
-    // this.angle =0;
-    // this.angularVelocity =0;
-    // this.isThrottling=false;
-    // this.isReversing=false;
-
+    game.speed.innerHTML = "Speed: " + this.speed;
+    game.collide.innerHTML = "Collision: " + this.collide;
 
     Entity.call(this, game, 645, 320);
 
@@ -275,11 +255,14 @@ Car.prototype.constructor = Car;
 //     return this.y;
 // };
 Car.prototype.update = function () {
-    
+    //sound1.playStartingSound();
+    //this.game.startsound.play();
     if (this.game.w) {
         if (this.speed < this.maxSpeed) {
             this.speed += 2;
         }
+        //this.game.startsound.pause();
+       // this.game.driftsound.pause();
     } 
 
     else if (this.game.s) {
@@ -287,6 +270,7 @@ Car.prototype.update = function () {
             this.speed -= 2;
         }
         
+        //this.game.driftsound.pause();
     } 
     if (this.game.d ) {
         if(this.speed !==0){
@@ -295,6 +279,8 @@ Car.prototype.update = function () {
         } else{
             this.angle -= 3;
     }
+    //this.game.startsound.pause();
+    //this.game.driftsound.play();
 }
     } 
     
@@ -306,56 +292,16 @@ Car.prototype.update = function () {
         }else{
             this.angle += 3;
     }
+    //this.game.startsound.pause();
+    //this.game.driftsound.play();
 }
       //this.speed +=1;  
     } 
+    //this.game.driftsound.pause();
+    this.game.speed.innerHTML = "Speed: " + this.speed;
 
     if(this.speed>0) this.speed-=1;
     if(this.speed<0) this.speed+=1;
-
-
-//  if (this.game.w) {
-//     if (this.speed < this.maxSpeed) {
-//         this.speed += 1;
-//     }
-//     this.up = true;
-//     this.mod = 1;
-// }  else if (this.game.s) {
-//         //this.mod = 0;
-//         if (this.speed > this.minSpeed) {
-//             this.speed -= 2;
-//         }
-//         this.down = true;
-
-//     } 
-//     if (this.game.d && this.speed > 0) {
-       
-//         if(this.speed > 0){
-//             this.angle += 5;
-//         } else{
-//             this.angle -= 5;
-//         }
-//         this.left = true;
-//         //ctx.drawImage(this.car, this.x, this.y);
-//         //this.ctx.rotateAndCache(this.car, this.angle);
-//     }
-//     else if (this.game.a ) {
-//         if(this.speed > 0){
-//             this.angle -= 5;
-//         } else{
-//             this.angle += 5;
-//         }
-//         this.right = true;
-//     } 
-    // if (this.y > 911) {
-    //     this.currentTile.src = "./img/4.png";
-    //     this.tile = 4;
-    // } else {
-    //     this.currentTile.src = "./img/5.jpg";
-    //     this.tile = 5;
-    // }
-
-    //console.log(this.angle);
 
     Entity.prototype.update.call(this);
 }
@@ -421,6 +367,104 @@ Car.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 
+function getRectFourPoints(x,y, width, height, ang, isDeg = false) {
+    
+	if(isDeg) ang = ang * (Math.PI / 180);
+    var point = [];
+
+    point.push([x,y]);
+
+
+	var sinAng = Math.sin(ang);	
+    var cosAng = Math.cos(ang);
+    
+	//console.log(ang);
+	var upDiff = sinAng * width;
+	var sideDiff = cosAng * width;
+
+    point.push([x + sideDiff,y + upDiff]);
+	
+	var upDiff1 = cosAng * height;//45
+    var sideDiff1 = sinAng * height;//0
+    
+    point.push([x + sideDiff1, -(y + upDiff1)]);
+	
+
+    point.push([x + sideDiff,-(y + upDiff1)]);
+	return point;
+}
+
+
+function doPolygonsIntersect (a, b) {
+    //console.log(b.frameHeight);
+    
+    var pointsOfA = getRectFourPoints(a.x,a.y,105,45,a.angle,true);
+    var pointsOfB = getRectFourPoints(b.x,b.y,105,45,b.angle,true);
+    
+
+
+    var polygons = [pointsOfA, pointsOfB];
+    var minA, maxA, projected, i, i1, j, minB, maxB;
+    //console.log(polygons.length);
+    for (i = 0; i < polygons.length; i++) {
+        // for each polygon, look at each edge of the polygon, and determine if it separates
+        // the two shapes
+        var polygon = polygons[i];
+        for (i1 = 0; i1 < 4; i1++) {
+    
+            // grab 2 vertices to create an edge
+            var i2 = (i1 + 1) % 4;
+            var p1 = polygon[i1];
+            var p2 = polygon[i2];
+            //console.log(p2[0]);
+            //console.log(polygon.sec)
+            //console.log(str2);;
+            // find the line perpendicular to this edge
+            var normal = [p2[1] - p1[1],  p1[0] - p2[0] ];
+
+            minA = maxA = undefined;
+            // for each vertex in the first shape, project it onto the line perpendicular to the edge
+            // and keep track of the min and max of these values
+            //console.log(a.length);
+            for (j = 0; j < 4; j++) {
+                projected = normal[0] * pointsOfA[j][0] + normal[1] * pointsOfA[j][1];
+                //console.log(projected);
+                if (minA===undefined || projected < minA) {
+                    minA = projected;
+                }
+                if (maxA===undefined || projected > maxA) {
+                    maxA = projected;
+                }
+            }
+
+            // for each vertex in the second shape, project it onto the line perpendicular to the edge
+            // and keep track of the min and max of these values
+            minB = maxB = undefined;
+            for (j = 0; j < 4; j++) {
+                projected = normal[0] * pointsOfB[j][0] + normal[1] * pointsOfB[j][1];
+                if (minB===undefined || projected < minB) {
+                    minB = projected;
+                }
+                if (maxB===undefined || projected > maxB) {
+                    maxB = projected;
+                }
+            }
+            // console.log(maxA < minB);
+            // console.log(maxB < minA);
+            // if there is no overlap between the projects, the edge we are looking at separates the two
+            // polygons, and we know there is no overlap
+            if (maxA < minB || maxB < minA) {
+                console.log("polygons don't intersect!");
+                return false;
+            }
+        }
+    }
+    // console.log(minA);
+    // console.log(minB);
+    // console.log(maxA);
+    // console.log(maxB);
+    return true;
+};
 // function Car1(game,x,y) {
 //     //this.animation = new Animation(ASSET_MANAGER.getAsset("./img/carRight.png"), 0, 0, 125, 125, 0.2, 1, true, true);
 //     // this.upAnimation = new Animation(ASSET_MANAGER.getAsset("./img/car1.png"), 0, 0, 262, 250, 0.02, 1, false, true);
@@ -988,6 +1032,8 @@ ASSET_MANAGER.queueDownload("./img/police.png");
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
     var canvas = document.getElementById('gameWorld');
+    var lives = document.getElementById('lives');
+
     var ctx = canvas.getContext('2d');
     
     var gameEngine = new GameEngine();
