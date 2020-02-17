@@ -238,8 +238,8 @@ function Car(game,x,y) {
     this.prevX = 0;
     this.prevY =  400;
     this.collide =0;
-    game.speed.innerHTML = "Speed: " + this.speed;
-    game.collide.innerHTML = "Collision: " + this.collide;
+    //game.speed.innerHTML = "Speed: " + this.speed;
+    //game.collide.innerHTML = "Collision: " + this.collide;
 
     Entity.call(this, game, 645, 320);
 
@@ -298,7 +298,7 @@ Car.prototype.update = function () {
       //this.speed +=1;  
     } 
     //this.game.driftsound.pause();
-    this.game.speed.innerHTML = "Speed: " + this.speed;
+    //this.game.speed.innerHTML = "Speed: " + this.speed;
 
     if(this.speed>0) this.speed-=1;
     if(this.speed<0) this.speed+=1;
