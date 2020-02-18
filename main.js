@@ -70,50 +70,81 @@ function Background(game) {
     for (var i = 0; i < 4; i++ ){
         this.tileMap[i] = new Array(6);   
     }
-    this.tileMap[0][0] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,4.jpg"),
-                                         width: 1515, height: 1535, buildings: []}; //{xL:, xR: yT:, yB}
-    this.tileMap[0][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,1.jpg"),
-                                                        width: 1515, height: 1535, buildings: []};
-    this.tileMap[0][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,2.jpg"),
-                                                        width: 1622, height: 1535, buildings: []};
-    this.tileMap[0][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,3.jpg"),
-                                                        width: 1620, height: 1535, buildings: []};
-    this.tileMap[0][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,4.jpg"),
-                                                        width: 1515, height: 1535, buildings: []};
-    this.tileMap[0][5] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,1.jpg"),
-                                         width: 1515, height: 1535, buildings: []};
-    this.tileMap[1][0] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,0.jpg"),
-                                                        width: 1160, height: 1260, buildings: []};
-    this.tileMap[1][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,1.jpg"),
-                                                        width: 1812, height: 1260, buildings: []};
-    this.tileMap[1][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,2.jpg"),
-                                                        width: 1619, height: 1259, buildings: []}; // stretch
-    this.tileMap[1][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,3.jpg"),
-                                                        width: 1619, height: 1259, buildings: []};
-    this.tileMap[1][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,4.jpg"),
-                                                        width: 1826, height: 1260, buildings: []};
-    this.tileMap[1][5] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,5.jpg"),
-                                                        width: 1160, height: 1260, buildings: []};
+    this.tileMap[0][0] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,4.jpg"), width: 1515, height: 1535, 
+                          buildings: []}; //{xL:, xR: ,yT:, yB:}
+    this.tileMap[0][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,1.jpg"), width: 1515, height: 1535, 
+                          buildings: [{xL:0, xR:1515, yT:0, yB:80}, {xL:1308, xR:1515, yT: 164, yB:1045},//
+                                      {xL:1416, xR: 1515,yT:0, yB:164}, {xL:0, xR:475, yT:0, yB:1535},
+                                      {xL:0, xR:1515, yT:1365, yB:1535}]};
+    this.tileMap[0][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,2.jpg"), width: 1622, height: 1535, 
+                          buildings: [{xL:0, xR:75 ,yT:0, yB:990}, {xL:292, xR:1433,yT:0, yB:485},
+                                      {xL:1519, xR: 1622,yT: 0, yB:546}, {xL: 0, xR:75 ,yT:1365, yB:1535},
+                                      {xL:290, xR:907 ,yT:765, yB:1142}, {xL:840, xR:1440,yT:828, yB:1211},
+                                      {xL:290, xR:764 ,yT:1208, yB:1535},{xL:1097, xR:1440,yT:1296, yB:1535},
+                                      {xL:764, xR: 1096,yT:1508, yB:1535}]};
+    this.tileMap[0][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,3.jpg"), width: 1620, height: 1535, 
+                          buildings: [{xL:1612, xR:1620 ,yT:207, yB:1045},{xL:1612, xR:1620 ,yT:0, yB:122},
+                                      {xL:283, xR: 1420,yT:0, yB:470},{xL:0, xR:190 ,yT:0, yB:546},
+                                      {xL:285, xR:874 ,yT:854, yB:1208},{xL:874, xR:1422,yT:806, yB:1138},
+                                      {xL:285, xR:609,yT:1296, yB:1535},{xL:609, xR:950 ,yT:1460, yB:1535},
+                                      {xL:950, xR: 1421,yT:1204, yB:1535}]};
+    this.tileMap[0][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,4.jpg"), width: 1515, height: 1535,
+                          buildings: [{xL:600, xR:1515 ,yT:1380, yB:1535},{xL:0, xR: 204,yT:0, yB:122},
+                                      {xL:1145, xR:1515 ,yT:0, yB:1535},{xL:0, xR:1515 ,yT:0, yB:75},
+                                      {xL:0, xR:300,yT:207, yB:1045}]};
+    this.tileMap[0][5] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,1.jpg"), width: 1515, height: 1535,
+                          buildings: []};
+    this.tileMap[1][0] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,0.jpg"), width: 1160, height: 1260,
+                          buildings: [{xL:0, xR:1160 ,yT:0, yB:484},{xL:143, xR:343 ,yT:0, yB:560},
+                                      {xL:0, xR:1160 ,yT:930, yB:1260}]};
+    this.tileMap[1][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,1.jpg"), width: 1812, height: 1260,
+                          buildings: [{xL:0, xR:1812 ,yT:0, yB:2},{xL:0, xR:1349 ,yT:0, yB:312},
+                                      {xL:0, xR: 1051,yT:0, yB:610},{xL:0, xR:645 ,yT:927, yB:1260},
+                                      {xL:645, xR:1212 ,yT:893, yB:1260},{xL:1212, xR: 1704,yT:941, yB:1260},
+                                      {xL:1747, xR:1812 ,yT:910, yB:1260}]};
+    this.tileMap[1][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,2.jpg"), width: 1623, height: 1259, 
+                          buildings: [{xL:0, xR: 75,yT:0, yB:3},{xL:289, xR:759,yT:0, yB:570},
+                                      {xL:759, xR: 1454,yT:10, yB:570},{xL:293, xR:1430 ,yT:888, yB:1259},
+                                      {xL:0, xR:65 ,yT:910, yB:1259}]}; 
+    this.tileMap[1][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,3.jpg"), width: 1619, height: 1259,
+                          buildings: [{xL:285, xR:1422 ,yT:888, yB:1259},{xL:1613, xR:1619 ,yT:910, yB:1259},
+                                      {xL:253, xR:970,yT:2, yB:584},{xL:970, xR:1421 ,yT:0, yB:584}]};
+    this.tileMap[1][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,4.jpg"), width: 1826, height: 1260,
+                          buildings: [{xL:876, xR: 1260,yT:0, yB:600},{xL:600, xR:876 ,yT:0, yB:309},
+                                      {xL:1282, xR:1260 ,yT:922, yB:1813},{xL:692, xR:1282 ,yT:901, yB:1260},
+                                      {xL:172, xR:692 ,yT:946, yB:1260},{xL:0, xR:134 ,yT:910, yB:1260}]};
+    this.tileMap[1][5] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,5.jpg"), width: 1160, height: 1260,
+                          buildings: [{xL:0, xR: 1160,yT:940, yB:1260},{xL:0, xR:1160 ,yT:0, yB:477},
+                                      {xL:951, xR:1160 ,yT:0,yB:554}]};
     this.tileMap[2][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/2,1.jpg"), width: 1021, height: 784,
                           buildings: [{xL: 0, xR: 1021, yT: 0, yB: 784}]};
-    this.tileMap[2][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/2,2.jpg"),
-                                                        width: 1622, height: 784, buildings: []};
-    this.tileMap[2][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/2,3.jpg"),
-                                                       width: 1618, height: 784, buildings: []};
-    this.tileMap[2][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/2,4.jpg"),
-                          width: 1028, height: 784, buildings: [{xL: 0, xR: 1028, yT: 0, yB: 784}]};
-    this.tileMap[3][0] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,0.jpg"),
-                                                        width: 1160, height: 928, buildings: []};
-    this.tileMap[3][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,1.jpg"),
-                                                        width: 1829, height: 924, buildings: []};
-    this.tileMap[3][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,2.jpg"),
-                                                        width: 1621, height: 924, buildings: []};
-    this.tileMap[3][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,3.jpg"),
-                                                        width: 1618, height: 924, buildings: []};
-    this.tileMap[3][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,4.jpg"),
-                                                        width: 1829, height: 924, buildings: []};
-    this.tileMap[3][5] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,5.jpg"),
-                                                        width: 1160, height: 928, buildings: []};
+    this.tileMap[2][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/2,2.jpg"), width: 1622, height: 784, 
+                          buildings: [{xL:0, xR:70 ,yT:0, yB:784},{xL:285, xR:1427,yT:0, yB:260},
+                                      {xL:1018, xR: 1436 ,yT:356, yB:784}]};
+    this.tileMap[2][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/2,3.jpg"), width: 1618, height: 784,
+                          buildings: [{xL:286, xR: 681,yT:356, yB:784},{xL:1611, xR:1618 ,yT:0, yB:784},
+                                      {xL:286, xR:1422,yT:0, yB:260}]};
+    this.tileMap[2][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/2,4.jpg"), width: 1028, height: 784, 
+                          buildings: [{xL: 0, xR: 1028, yT: 0, yB: 784}]};
+    this.tileMap[3][0] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,0.jpg"), width: 1160, height: 928, 
+                          buildings: [{xL:0, xR:1160 ,yT:0, yB:283}, {xL:0,xR:1160,yT:588, yB:928}]};
+    this.tileMap[3][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,1.jpg"), width: 1829, height: 924,
+                         buildings: [{xL:0, xR:1829 ,yT:586, yB:924},{xL:1755, xR:1829 ,yT:0, yB:164},
+                                     {xL:1183, xR:1829 ,yT:0, yB:304},{xL:0, xR:1829 ,yT:0, yB:280}]};
+    this.tileMap[3][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,2.jpg"), width: 1621, height: 924, 
+                          buildings: [{xL:0, xR:80,yT:596, yB:924}, {xL:0, xR:72 ,yT:0,yB:295},
+                                      {xL:291, xR:1433,yT:543, yB:924}, {xL:1518, xR:1621,yT:523, yB:924},
+                                      {xL:1028, xR:1436,yT:0,yB:217}]};
+    this.tileMap[3][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,3.jpg"), width: 1618, height: 924, 
+                          buildings: [{xL:0, xR:190 ,yT:523, yB:924},{xL:284, xR:1419 ,yT:545, yB:924},
+                                      {xL:287, xR:681 ,yT:0, yB:236},{xL:1611, xR:1618 ,yT:0, yB:305},
+                                      {xL:1612, xR:1618 ,yT:590, yB:928}]};
+    this.tileMap[3][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,4.jpg"), width: 1829, height: 924, 
+                          buildings: [{xL:0, xR:1829 ,yT:590, yB:924}, {xL:0, xR:795,yT:0, yB:305},
+                                      {xL:790, xR: 1829 ,yT:0, yB:280}]};
+    this.tileMap[3][5] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,5.jpg"), width: 1160, height: 928,
+                          buildings: [{xL: 0,xR:1160,yT:621,yB:928}, {xL:0, xR:1160 ,yT:0, yB:276},
+                                      {xL:922, xR:1160 ,yT:558, yB:928}, {xL:386, xR: 554,yT:0,yB:323}]};
     this.curTile = {row: 0, col: 1}; // 0,1
    
 }
@@ -258,7 +289,7 @@ Background.prototype.update = function () {
     var row = this.curTile.row;
     var col = this.curTile.col;
 
-    console.log("distance X: " + this.distanceTraveledX + " \n distance Y: " +this.distanceTraveledY);
+    console.log("distance X: " + this.distanceTraveledX + " \n distance Y: " + this.distanceTraveledY);
     
     if (this.distanceTraveledX > tileW){
         if ((row === 1 || row == 3) && col == 5) { // if row 1 or 3 
@@ -335,66 +366,84 @@ Car.prototype = new Entity();
 Car.prototype.constructor = Car;
 Car.prototype.update = function () {
 
-    if (this.game.d && this.speed > 0) {
-       
-        if(this.speed > 0){
-            this.angle += 5;
-        } else{
-            this.angle -= 5;
+     if (this.game.w) {
+        if (this.speed < this.maxSpeed) {
+            this.speed += 2;
         }
-        this.left = true;
-    } else if (this.game.s) {
-        //this.mod = 0;
+        //this.game.startsound.pause();
+       // this.game.driftsound.pause();
+    } 
+
+    else if (this.game.s) {
         if (this.speed > this.minSpeed) {
             this.speed -= 2;
         }
-        this.down = true;
-
-    } else if (this.game.a ) {
+        
+        //this.game.driftsound.pause();
+    } 
+    if (this.game.d ) {
+        if(this.speed !==0){
         if(this.speed > 0){
-            this.angle -= 5;
+            this.angle += 3;
         } else{
-            this.angle += 5;
-        }
-        this.right = true;
-    } else if (this.game.w) {
-        if (this.speed < this.maxSpeed) {
-            this.speed += 1;
-        }
-        this.up = true;
-        this.mod = 1;
+            this.angle -= 3;
     }
+    //this.game.startsound.pause();
+    //this.game.driftsound.play();
+}
+    } 
+    
+    else if (this.game.a) {
+        if(this.speed !==0){
+         
+        if(this.speed > 0){
+            this.angle -= 3;
+        }else{
+            this.angle += 3;
+    }
+    //this.game.startsound.pause();
+    //this.game.driftsound.play();
+}
+      //this.speed +=1;  
+    } 
+    if(this.speed>0) this.speed-=1;
+    if(this.speed<0) this.speed+=1;
+
     Entity.prototype.update.call(this);
 }
 
 Car.prototype.draw = function (ctx) {
     
     var col = this.game.Background.curTile.col;
-    var row = this.game.Background.curTile.row
-    if (canDrive(this.x, this.y, this.game.Background.tileMap[row][col].buildings)) { //******************************** */
+    var row = this.game.Background.curTile.row;
 
-        var travelX = (this.speed * this.mod) * Math.cos(Math.PI / 180 * this.angle); //********* */
-        var travelY = (this.speed * this.mod) * Math.sin(Math.PI / 180 * this.angle);
-        this.prevX = this.x;
-        this.prevY = this.y;
+    if (canDrive(this.game.Background.distanceTraveledX, this.game.Background.distanceTraveledY,
+                 this.game.Background.tileMap[row][col].buildings)) { //******************************** */
+
+        var travelX = (this.speed) * Math.cos(Math.PI / 180 * this.angle); //********* */
+        var travelY = (this.speed) * Math.sin(Math.PI / 180 * this.angle);
+        
         this.x += travelX;
         this.y += travelY;
 
         X_OFFSET += travelX; //****
         Y_OFFSET += travelY; //*****
+        this.prevX =  this.game.Background.distanceTraveledX;
+        this.prevY =  this.game.Background.distanceTraveledY;
         this.game.Background.distanceTraveledX += travelX; //*****
         this.game.Background.distanceTraveledY += travelY; //*****
 
 
-    } else {
-        this.x = this.prevX;
-        this.y = this.prevY;
+    } 
+    // console.log("x: ", this.x, "y: ", this.y, " speed: ", this.speed);
+    else {
         this.speed = 0;
         this.collide += 1; 
-        this.game.Background.distanceTraveledX -= this.x - this.prevX; //*****
-        this.game.Background.distanceTraveledY -= this.y - this.prevY; //*****
+        this.game.Background.distanceTraveledX = this.prevX; //*****
+        this.game.Background.distanceTraveledY = this.prevY; //*****
 
     }
+
     ctx.save();
     ctx.translate(this.x - X_OFFSET, this.y - Y_OFFSET); //*************
     ctx.rotate(Math.PI / 180 * this.angle);
@@ -405,14 +454,12 @@ Car.prototype.draw = function (ctx) {
 }
 //****************************************************/
 function canDrive(X, Y, tilePaths) {
-    this.X = X - X_OFFSET; // need to take in count width and height 
-    this.Y = Y - Y_OFFSET;
-    this.canPass = true;
-    this.tilePaths = tilePaths;
-    for (var i = 0; i < this.tilePaths.length, i++;) {
-        var paths = this.tilePaths[i];    
-        if ((this.X >= paths.xL && this.X <= paths.xR) &&
-                (this.Y >= paths.yT && this.Y <= paths.yB)) {
+    var canPass = true;
+    console.log(canPass);
+    for (var i = 0; i < tilePaths.length; i++) {
+        var paths = tilePaths[i]; 
+        if ((X > paths.xL && X < paths.xR) &&
+                (Y > paths.yT && Y < paths.yB)) {
                 canPass = false;
                 break;
         }
