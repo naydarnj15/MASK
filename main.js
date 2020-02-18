@@ -1,4 +1,3 @@
-
 function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse) {
     this.spriteSheet = spriteSheet;
     this.startX = startX;
@@ -73,11 +72,11 @@ function Background(game) {
     this.tileMap[0][0] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,4.jpg"), width: 1515, height: 1535, 
                           buildings: []}; //{xL:, xR: ,yT:, yB:}
     this.tileMap[0][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,1.jpg"), width: 1515, height: 1535, 
-                          buildings: [{xL:0, xR:1515, yT:0, yB:80}, {xL:1308, xR:1515, yT: 164, yB:1045},//
+                          buildings: [{xL:0, xR:1515, yT:0, yB:80}, {xL:1308, xR:1520, yT: 164, yB:1045},//
                                       {xL:1416, xR: 1515,yT:0, yB:164}, {xL:0, xR:475, yT:0, yB:1535},
                                       {xL:0, xR:1515, yT:1365, yB:1535}]};
     this.tileMap[0][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,2.jpg"), width: 1622, height: 1535, 
-                          buildings: [{xL:0, xR:75 ,yT:0, yB:990}, {xL:292, xR:1433,yT:0, yB:485},
+                          buildings: [{xL:0, xR:80 ,yT:0, yB:1045}, {xL:292, xR:1433,yT:0, yB:485},
                                       {xL:1519, xR: 1622,yT: 0, yB:546}, {xL: 0, xR:75 ,yT:1365, yB:1535},
                                       {xL:290, xR:907 ,yT:765, yB:1142}, {xL:840, xR:1440,yT:828, yB:1211},
                                       {xL:290, xR:764 ,yT:1208, yB:1535},{xL:1097, xR:1440,yT:1296, yB:1535},
@@ -98,12 +97,12 @@ function Background(game) {
                           buildings: [{xL:0, xR:1160 ,yT:0, yB:484},{xL:143, xR:343 ,yT:0, yB:560},
                                       {xL:0, xR:1160 ,yT:930, yB:1260}]};
     this.tileMap[1][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,1.jpg"), width: 1812, height: 1260,
-                          buildings: [{xL:0, xR:1812 ,yT:0, yB:2},{xL:0, xR:1349 ,yT:0, yB:312},
+                          buildings: [{xL:0, xR:1825 ,yT:0, yB:6},{xL:0, xR:1349 ,yT:0, yB:312},
                                       {xL:0, xR: 1051,yT:0, yB:610},{xL:0, xR:645 ,yT:927, yB:1260},
                                       {xL:645, xR:1212 ,yT:893, yB:1260},{xL:1212, xR: 1704,yT:941, yB:1260},
                                       {xL:1747, xR:1812 ,yT:910, yB:1260}]};
     this.tileMap[1][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,2.jpg"), width: 1623, height: 1259, 
-                          buildings: [{xL:0, xR: 75,yT:0, yB:3},{xL:289, xR:759,yT:0, yB:570},
+                          buildings: [{xL:0, xR: 80,yT:-10, yB:6},{xL:289, xR:759,yT:0, yB:570},
                                       {xL:759, xR: 1454,yT:10, yB:570},{xL:293, xR:1430 ,yT:888, yB:1259},
                                       {xL:0, xR:65 ,yT:910, yB:1259}]}; 
     this.tileMap[1][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,3.jpg"), width: 1619, height: 1259,
@@ -134,7 +133,7 @@ function Background(game) {
     this.tileMap[3][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,2.jpg"), width: 1621, height: 924, 
                           buildings: [{xL:0, xR:80,yT:596, yB:924}, {xL:0, xR:72 ,yT:0,yB:295},
                                       {xL:291, xR:1433,yT:543, yB:924}, {xL:1518, xR:1621,yT:523, yB:924},
-                                      {xL:1028, xR:1436,yT:0,yB:217}]};
+                                      {xL:1018, xR:1436,yT:0,yB:217}]};
     this.tileMap[3][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,3.jpg"), width: 1618, height: 924, 
                           buildings: [{xL:0, xR:190 ,yT:523, yB:924},{xL:284, xR:1419 ,yT:545, yB:924},
                                       {xL:287, xR:681 ,yT:0, yB:236},{xL:1611, xR:1618 ,yT:0, yB:305},
@@ -350,8 +349,7 @@ function Car(game,x,y) {
     this.radius = 100;
     this.ground = 400;
     this.prevX = 638; // *******************
-    this.prevY = 345; //**************** */
-
+    this.prevY = 345; // *******************
     Entity.call(this, game, 638, 345); 
 
 }
@@ -406,20 +404,29 @@ Car.prototype.update = function () {
     Entity.prototype.update.call(this);
 }
 Car.prototype.canPass = function (X,Y,tilePaths) {
+    // var canPass = true;
+    // for (var i = 0; i < tilePaths.length; i++) {
+    //     var paths = tilePaths[i]; 
+    //     var w = paths.xR-paths.xL;
+    //     var h = paths.yB-paths.yT;
+    //     var b = {x: paths.xL, y:paths.yT, width: w, height: h, angle:0, bool:true};
+    //     var c = {x: X , y: Y, width:108, height:46, angle: this.angle};
+        
+    //     if (doPolygonsIntersect(b,c)) {
+    //         canPass = false;
+    //         break;
+    //     }
+    // }
+    // return canPass;
     var canPass = true;
     console.log(canPass);
     for (var i = 0; i < tilePaths.length; i++) {
         var paths = tilePaths[i]; 
-        var b ={x:paths.xL,y:paths.yT,width:paths.xR-paths.xL,height:paths.yB-paths.yT,angle:0,bool:true};
-        if(doPolygonsIntersect(b,this)){
-            canPass =false;
-            break;
+        if ((X > paths.xL && X < paths.xR) &&
+                (Y > paths.yT && Y < paths.yB)) {
+                canPass = false;
+                break;
         }
-        // if ((X > paths.xL && X < paths.xR) &&
-        //         (Y > paths.yT && Y < paths.yB)) {
-        //         canPass = false;
-        //         break;
-        // }
     }
     return canPass;
 }
@@ -509,7 +516,7 @@ function doPolygonsIntersect (a, b) {
     //console.log(b.frameHeight);
     
     var pointsOfA = getRectFourPoints(a.x,a.y,a.width,a.height,a.angle,a.bool);
-    var pointsOfB = getRectFourPoints(b.x,b.y,108,46,b.angle,true);
+    var pointsOfB = getRectFourPoints(b.x,b.y,b.width,b.height,b.angle,true);//
 
     // console.log(b.width);
     // console.log(b.height);
@@ -642,15 +649,9 @@ ASSET_MANAGER.downloadAll(function () {
     var ctx = canvas.getContext('2d');
     
     var gameEngine = new GameEngine();
-    //var bg = new Background(gameEngine);\
-    //gameEngine.addEntity(bg);
-    
 
     gameEngine.init(ctx);
     gameEngine.start();
-
-    // gameEngine.addEntity(new Background(gameEngine, ASSET_MANAGER.getAsset("./img/5.jpg"), 0, 0));
-    // gameEngine.addEntity(new Background(gameEngine, ASSET_MANAGER.getAsset("./img/4.png"), 0, 911));
     
     //********************
     var BG = new Background(gameEngine)
@@ -670,4 +671,3 @@ ASSET_MANAGER.downloadAll(function () {
     // var police = new Police(gameEngine);
     // gameEngine.addEntity(police);
 });
-
