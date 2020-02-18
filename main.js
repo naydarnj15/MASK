@@ -330,11 +330,6 @@ Background.prototype.update = function () {
 //************************************************************* */
 
 function Car(game,x,y) {
-    //this.animation = new Animation(ASSET_MANAGER.getAsset("./img/carRight.png"), 0, 0, 256, 256, 0.2, 1, true, true);
-    // this.upAnimation = new Animation(ASSET_MANAGER.getAsset("./img/car1.png"), 0, 0, 262, 250, 0.02, 1, false, true);
-    // this.downAnimation = new Animation(ASSET_MANAGER.getAsset("./img/car1.png"), 0, 250, 262, 250, 0.02, 1, false, true);
-    // this.leftAnimation = new Animation(ASSET_MANAGER.getAsset("./img/car1.png"), 262, 0, 262, 250, 0.02, 1, false, true);
-    // this.rightAnimation = new Animation(ASSET_MANAGER.getAsset("./img/car1.png"), 262, 250, 262, 250, 0.02, 1, false, true);
     this.game = game;                                                               
     this.tile = 5;
 
@@ -345,7 +340,6 @@ function Car(game,x,y) {
     this.minSpeed = -7;
 
     this.angle = 0;
-    this.mod = 0;
     this.car = new Image();
     this.car.src = "./img/CarRight.png";
 
@@ -411,13 +405,30 @@ Car.prototype.update = function () {
 
     Entity.prototype.update.call(this);
 }
-
+Car.prototype.canPass = function (X,Y,tilePaths) {
+    var canPass = true;
+    console.log(canPass);
+    for (var i = 0; i < tilePaths.length; i++) {
+        var paths = tilePaths[i]; 
+        var b ={x:paths.xL,y:paths.yT,width:paths.xR-paths.xL,height:paths.yB-paths.yT,angle:0,bool:true};
+        if(doPolygonsIntersect(b,this)){
+            canPass =false;
+            break;
+        }
+        // if ((X > paths.xL && X < paths.xR) &&
+        //         (Y > paths.yT && Y < paths.yB)) {
+        //         canPass = false;
+        //         break;
+        // }
+    }
+    return canPass;
+}
 Car.prototype.draw = function (ctx) {
     
     var col = this.game.Background.curTile.col;
     var row = this.game.Background.curTile.row;
-
-    if (canDrive(this.game.Background.distanceTraveledX, this.game.Background.distanceTraveledY,
+    //if(doPolygonsIntersect())
+    if (this.canPass(this.game.Background.distanceTraveledX, this.game.Background.distanceTraveledY,
                  this.game.Background.tileMap[row][col].buildings)) { //******************************** */
 
         var travelX = (this.speed) * Math.cos(Math.PI / 180 * this.angle); //********* */
@@ -453,19 +464,141 @@ Car.prototype.draw = function (ctx) {
     Entity.prototype.draw.call(this);
 }
 //****************************************************/
-function canDrive(X, Y, tilePaths) {
-    var canPass = true;
-    console.log(canPass);
-    for (var i = 0; i < tilePaths.length; i++) {
-        var paths = tilePaths[i]; 
-        if ((X > paths.xL && X < paths.xR) &&
-                (Y > paths.yT && Y < paths.yB)) {
-                canPass = false;
-                break;
+function rotatePoint(pivot, point, angle) {
+    // Rotate clockwise, angle in radians
+    var x = Math.round((Math.cos(angle) * (point[0] - pivot[0])) -
+                       (Math.sin(angle) * (point[1] - pivot[1])) +
+                       pivot[0]),
+        y = Math.round((Math.sin(angle) * (point[0] - pivot[0])) +
+                       (Math.cos(angle) * (point[1] - pivot[1])) +
+                       pivot[1]);
+    return [x, y];
+  };
+
+
+function getRectFourPoints(x,y, width, height, ang,isDeg =false,) {
+   
+    var pivot =[x+width/2, y+height/2];
+    console.log(x+width/2);
+    console.log(y+height/2);
+	if(isDeg) ang = ang * (Math.PI / 180);
+    var point = [];
+    var point0 =rotatePoint(pivot,[x,y],ang);
+    point.push(point0);
+
+
+	var sinAng = Math.sin(ang);	
+    var cosAng = Math.cos(ang);
+    
+	
+    var point1= rotatePoint(pivot,[x + width,y],ang);
+    point.push(point1);
+	
+    var point2= rotatePoint(pivot,[x, y + height],ang);
+
+    point.push(point2);
+
+    var point3= rotatePoint(pivot,[x +width,y + height],ang);
+
+    point.push(point3);
+	return point;
+}
+
+
+function doPolygonsIntersect (a, b) {
+    //console.log(b.frameHeight);
+    
+    var pointsOfA = getRectFourPoints(a.x,a.y,a.width,a.height,a.angle,a.bool);
+    var pointsOfB = getRectFourPoints(b.x,b.y,108,46,b.angle,true);
+
+    // console.log(b.width);
+    // console.log(b.height);
+    // console.log(pointsOfB[2]);
+    // console.log(pointsOfB[3]);
+
+    var polygons = [pointsOfA, pointsOfB];
+    var minA, maxA, projected, i, i1, j, minB, maxB;
+    //console.log(polygons.length);
+    for (i = 0; i < polygons.length; i++) {
+        // for each polygon, look at each edge of the polygon, and determine if it separates
+        // the two shapes
+        var polygon = polygons[i];
+        for (i1 = 0; i1 < 4; i1++) {
+    
+            // grab 2 vertices to create an edge
+            var i2 = (i1 + 1) % 4;
+            var p1 = polygon[i1];
+            var p2 = polygon[i2];
+            //console.log(p2[0]);
+            //console.log(polygon.sec)
+            //console.log(str2);;
+            // find the line perpendicular to this edge
+            var normal = [p2[1] - p1[1],  p1[0] - p2[0] ];
+
+            minA = maxA = undefined;
+            // for each vertex in the first shape, project it onto the line perpendicular to the edge
+            // and keep track of the min and max of these values
+            //console.log(a.length);
+            for (j = 0; j < 4; j++) {
+                projected = normal[0] * pointsOfA[j][0] + normal[1] * pointsOfA[j][1];
+                //console.log(projected);
+                if (minA===undefined || projected < minA) {
+                    minA = projected;
+                }
+                if (maxA===undefined || projected > maxA) {
+                    maxA = projected;
+                }
+            }
+
+            // for each vertex in the second shape, project it onto the line perpendicular to the edge
+            // and keep track of the min and max of these values
+            minB = maxB = undefined;
+            for (j = 0; j < 4; j++) {
+                projected = normal[0] * pointsOfB[j][0] + normal[1] * pointsOfB[j][1];
+                if (minB===undefined || projected < minB) {
+                    minB = projected;
+                }
+                if (maxB===undefined || projected > maxB) {
+                    maxB = projected;
+                }
+            }
+            // console.log(maxA < minB);
+            // console.log(maxB < minA);
+            // if there is no overlap between the projects, the edge we are looking at separates the two
+            // polygons, and we know there is no overlap
+            if (maxA < minB || maxB < minA) {
+                console.log("polygons don't intersect!");
+                return false;
+            }
         }
     }
-    return canPass;
-}
+    // console.log(minA);
+    // console.log(minB);
+    // console.log(maxA);
+    // console.log(maxB);
+    return true;
+};
+
+// Edit it
+// function canDrive(X, Y, tilePaths,game) {
+//     this.game = game;
+//     var canPass = true;
+//     console.log(canPass);
+//     for (var i = 0; i < tilePaths.length; i++) {
+//         var paths = tilePaths[i]; 
+//         var b ={x:paths.xL,y:paths.yT,width:paths.xR-paths.xL,height:paths.yB-paths.yT,angle:0,bool:true};
+//         if(doPolygonsIntersect(b,this.game.car)){
+//             canPass =false;
+//             break;
+//         }
+//         // if ((X > paths.xL && X < paths.xR) &&
+//         //         (Y > paths.yT && Y < paths.yB)) {
+//         //         canPass = false;
+//         //         break;
+//         // }
+//     }
+//     return canPass;
+// }
 //*************************************************** */
 
 
@@ -498,6 +631,7 @@ ASSET_MANAGER.queueDownload("./img/FinalTiles/3,3.jpg");
 ASSET_MANAGER.queueDownload("./img/FinalTiles/3,4.jpg");
 ASSET_MANAGER.queueDownload("./img/FinalTiles/3,5.jpg");
 ASSET_MANAGER.queueDownload("./img/CarRight.png");
+ASSET_MANAGER.queueDownload("./img/CarRight1.png");
 ASSET_MANAGER.queueDownload("./img/CarUp1.png");
 ASSET_MANAGER.queueDownload("./img/police.png");
 
