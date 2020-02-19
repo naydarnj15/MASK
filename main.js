@@ -59,6 +59,7 @@ Animation.prototype.isDone = function () {
 var X_OFFSET = 60;
 var Y_OFFSET = 0;
 var SCOPE_OF_TILES = [];
+var parkedCars;
 //BACKGROUND CODE ***********************************
 function Background(game) {
     this.game = game;
@@ -149,6 +150,7 @@ function Background(game) {
 }
 
 Background.prototype.draw = function () {
+    SCOPE_OF_TILES = [];
     this.ctx.imageSmoothingQuality = 'medium';
     this.ctx.imageSmoothingEnabled = true;
     var tile = this.tileMap[this.curTile.row][this.curTile.col];
@@ -165,6 +167,7 @@ Background.prototype.draw = function () {
     var YT =  this.distanceTraveledY - 285;
     var YB = this. distanceTraveledY + 285;
     this.ctx.drawImage(tile.img, XL, YT, 1250, 570, 0,0, 1250, 570);
+    SCOPE_OF_TILES.push({row: this.curTile, col: this.curTile.col}); /// add OFFSETSSS 
       // (tile.img, Source x, source Y,  source width, source height, 0connect , 0connect, resizing w 1250, h 510);
     
    
@@ -182,7 +185,8 @@ Background.prototype.draw = function () {
                 t1 = this.tileMap[this.curTile.row][col];
             }
             var nextL = -t1.width + (625 - this.distanceTraveledX);
-            this.ctx.drawImage(t1.img, 0, YT, t1.width, 570, nextL, 0, t1.width, 570);
+            this.ctx.drawImage(t1.img, 0, YT, t1.width, 570, nextL, 0, t1.width + 1.5, 570);
+            SCOPE_OF_TILES.push({row: this.curTile, col: col});
          
     } 
 } catch {
@@ -191,14 +195,16 @@ Background.prototype.draw = function () {
     var nextR;
     if (XR > tile.width) {//col++{
             var t2;
+            var col2;
             if (this.curTile.col == 5) {
-                t2 = this.tileMap[this.curTile.row][0];
+                col2 = 0;
             } else {
-                t2 = this.tileMap[this.curTile.row][this.curTile.col + 1];
+                col2 = this.curTile.col + 1;
             }
-           
+            t2 = this.tileMap[this.curTile.row][col2];
             var nextR = 625 + (tile.width - this.distanceTraveledX);
             this.ctx.drawImage(t2.img, 0, YT, 1250, 570, nextR, 0, 1250, 570);
+            SCOPE_OF_TILES.push({row: this.curTile, col: col2});
             //add scope of tiles .push 
        
     }
@@ -206,41 +212,43 @@ Background.prototype.draw = function () {
     console.log("skip right col");
 } try {
     if (YT < 0) {//row--    /UP
-        var row = this.curTile.row == 0 ? 3 :  this.curTile.row - 1;
+        var row2 = this.curTile.row == 0 ? 3 :  this.curTile.row - 1;
 
-        var t4 = this.tileMap[row][this.curTile.col];
+        var t4 = this.tileMap[row2][this.curTile.col];
         var nextU = -t4.height + (285 - this.distanceTraveledY);
 
-        if (row == 0 && (this.curTile.col == 1 || this.curTile.col == 4)) {
+        if (row2 == 0 && (this.curTile.col == 1 || this.curTile.col == 4)) {
             if (this.curTile.col == 1) {
                 this.ctx.drawImage(t4.img, XL - 500, 0, t4.width, t4.height, -200, nextU, t4.width, t4.height);
             } else if (this.curTile.col == 4) {
                  this.ctx.drawImage(t4.img, XL, 0, t4.width, t4.height, 0, nextU, t4.width, t4.height);
              
             }
-        }  else if (row == 3 && (this.curTile.col == 1 || this.curTile.col == 4)) { 
+        }  else if (row2 == 3 && (this.curTile.col == 1 || this.curTile.col == 4)) { 
                 if (this.curTile.col == 1) {
                     this.ctx.drawImage(t4.img, XL, 0, t4.width, t4.height, -312, nextU, t4.width, t4.height);
                   
 
-                } else if (this.curTile.col == 4) { //// CHANGEEE
+                } else if (this.curTile.col == 4) {
                     this.ctx.drawImage(t4.img, XL, 0, t4.width, t4.height, 0, nextU, t4.width, t4.height);
                 
                 }  
         } else { 
            var scoot = tile.width - t4.width;
-           this.ctx.drawImage(t4.img, XL, 0, 1250, t4.height, -.75 - scoot, nextU, 1256, t4.height);
+           this.ctx.drawImage(t4.img, XL, 0, 1250, t4.height, -1 - scoot, nextU, 1256, t4.height);
 
         }
-        
+        SCOPE_OF_TILES.push({row: row2, col: this.curTile.col});
         if (XR > tile.width) {
             //also do the bottom to the right
-            var t5 = this.tileMap[row][this.curTile.col + 1];
+            var t5 = this.tileMap[row2][this.curTile.col + 1];
             this.ctx.drawImage(t5.img, 0, 0, 1250, t5.height, nextR - 1.25, nextU, 1252, t5.height);
+            SCOPE_OF_TILES.push({row: row2, col: this.curTile.col + 1});
         }  else if (XL < tile.width) {
-            var t5 =  this.tileMap[row][this.curTile.col - 1];
+            var t5 =  this.tileMap[row2][this.curTile.col - 1];
             var nextl = -t5.width + (625 - this.distanceTraveledX);
             this.ctx.drawImage(t5.img, 0, 0, t5.width, t5.height, nextl + 2, nextU, t5.width+3, t5.height);
+            SCOPE_OF_TILES.push({row: row2, col: this.curTile.col - 1});
         }
     } 
 } catch {
@@ -248,11 +256,11 @@ Background.prototype.draw = function () {
 } try {
     // var next4;
     if (YB > tile.height) {//row++   DOWN
-        var row = this.curTile.row == 3 ? 0 :  this.curTile.row + 1;
+        var row3 = this.curTile.row == 3 ? 0 :  this.curTile.row + 1;
 
-        var t4 = this.tileMap[row][this.curTile.col];
+        var t4 = this.tileMap[row3][this.curTile.col];
         var nextD = 285 + (tile.height - this.distanceTraveledY);
-        if (row == 1 && (this.curTile.col == 1 || this.curTile.col == 4)) {
+        if (row3 == 1 && (this.curTile.col == 1 || this.curTile.col == 4)) {
             if (this.curTile.col == 1) {
                 this.ctx.drawImage(t4.img, XL, 0, t4.width, 570,-297, nextD, t4.width, 570);
             } else if (this.curTile.col == 4) {
@@ -262,16 +270,18 @@ Background.prototype.draw = function () {
             var scoot = tile.width - t4.width;
             this.ctx.drawImage(t4.img, XL, 0, 1250, 570, -1 - scoot, nextD, 1258, 570);
         }
-
+        SCOPE_OF_TILES.push({row: row3, col: this.curTile.col});
         if (XR > tile.width) {
                 //also do the bottom to the right
-                var t5 = this.tileMap[row][this.curTile.col + 1];
+                var t5 = this.tileMap[row3][this.curTile.col + 1];
                 this.ctx.drawImage(t5.img, 0, 0, 1250, 570, nextR, nextD, 1252, 570);
+                SCOPE_OF_TILES.push({row: row3, col: this.curTile.col+1});
             }  else if (XL < tile.width) {
               //  console.log("col", this.curTile.col, " row: ", row);
-                var t5 =  this.tileMap[row][this.curTile.col - 1];
+                var t5 =  this.tileMap[row3][this.curTile.col - 1];
                 var nextl = -t5.width + (625 - this.distanceTraveledX);
-                this.ctx.drawImage(t5.img, 0, 0, t5.width, 570, nextl, nextD, t5.width + 4, 570);
+                this.ctx.drawImage(t5.img, 0, 0, t5.width, 570, nextl + .5, nextD, t5.width + 4, 570);
+                SCOPE_OF_TILES.push({row: row3, col: this.curTile.col - 1});
         }
 
     }
@@ -291,14 +301,16 @@ Background.prototype.update = function () {
     console.log("distance X: " + this.distanceTraveledX + " \n distance Y: " + this.distanceTraveledY);
     
     if (this.distanceTraveledX > tileW){
+        STATIONARYX -= tileW; /////////////////
         if ((row === 1 || row == 3) && col == 5) { // if row 1 or 3 
-            this.curTile.col = 0;
-            
+            this.curTile.col = 0;      
         } else {
             this.curTile.col++;
         }
         this.distanceTraveledX = 1;
+        
     } else if (this.distanceTraveledX < 0) { // col change
+        STATIONARYX += tileW
         if ((row === 1 || row == 3) && col === 0) { // if row 1 or 3
             this.curTile.col = 5;
         } else {
@@ -306,6 +318,7 @@ Background.prototype.update = function () {
         }
         this.distanceTraveledX = this.tileMap[this.curTile.row][this.curTile.col].width - 1;
     } else if (this.distanceTraveledY> tileH) { // down
+        STATIONARYY -= tileH
         if (row === 3 )  {
             this.curTile.row = 0;
         } else {
@@ -313,6 +326,7 @@ Background.prototype.update = function () {
         }
          this.distanceTraveledY = 1;
     } else if ( this.distanceTraveledY < 0) { // up
+        STATIONARYY += tileH
         if (row === 0 )  {
             this.curTile.row = 3;
         } else {
@@ -340,7 +354,7 @@ function Car(game,x,y) {
 
     this.angle = 0;
     this.car = new Image();
-    this.car.src = "./img/CarRight.png";
+    this.car.src = "./img/muscleCar.png";
 
     this.drag =0.95;
     this.angularDrag =0.95;
@@ -350,6 +364,8 @@ function Car(game,x,y) {
     this.ground = 400;
     this.prevX = 638; // *******************
     this.prevY = 345; // *******************
+    this.prevOFFx = X_OFFSET; //*** */
+    this.prevOFFy = Y_OFFSET;//**** */
     Entity.call(this, game, 638, 345); 
 
 }
@@ -418,8 +434,9 @@ Car.prototype.canPass = function (X,Y,tilePaths) {
     //     }
     // }
     // return canPass;
-    var canPass = true;
-    console.log(canPass);
+    // var oldSpeed = this.speed;
+    // this.speed = 0; 
+     var canPass = true;
     for (var i = 0; i < tilePaths.length; i++) {
         var paths = tilePaths[i]; 
         if ((X > paths.xL && X < paths.xR) &&
@@ -435,17 +452,22 @@ Car.prototype.draw = function (ctx) {
     var col = this.game.Background.curTile.col;
     var row = this.game.Background.curTile.row;
     //if(doPolygonsIntersect())
+    
     if (this.canPass(this.game.Background.distanceTraveledX, this.game.Background.distanceTraveledY,
-                 this.game.Background.tileMap[row][col].buildings)) { //******************************** */
+                 this.game.Background.tileMap[row][col].buildings) && !this.collidesWithCar(this.game)) { //******************************** */
 
+        
         var travelX = (this.speed) * Math.cos(Math.PI / 180 * this.angle); //********* */
         var travelY = (this.speed) * Math.sin(Math.PI / 180 * this.angle);
-        
         this.x += travelX;
         this.y += travelY;
 
+        this.prevOFFx = X_OFFSET; ////************ */
+        this.prevOFFy = Y_OFFSET; ///************** */
         X_OFFSET += travelX; //****
         Y_OFFSET += travelY; //*****
+        STATIONARYX += travelX;
+        STATIONARYY +=travelY;
         this.prevX =  this.game.Background.distanceTraveledX;
         this.prevY =  this.game.Background.distanceTraveledY;
         this.game.Background.distanceTraveledX += travelX; //*****
@@ -459,6 +481,9 @@ Car.prototype.draw = function (ctx) {
         this.collide += 1; 
         this.game.Background.distanceTraveledX = this.prevX; //*****
         this.game.Background.distanceTraveledY = this.prevY; //*****
+        // STATIONARYX = this.prevOFFx;
+        // STATIONARYY = this.prevOFFy
+        
 
     }
 
@@ -515,8 +540,8 @@ function getRectFourPoints(x,y, width, height, ang,isDeg =false,) {
 function doPolygonsIntersect (a, b) {
     //console.log(b.frameHeight);
     
-    var pointsOfA = getRectFourPoints(a.x,a.y,a.width,a.height,a.angle,a.bool);
-    var pointsOfB = getRectFourPoints(b.x,b.y,b.width,b.height,b.angle,true);//
+    var pointsOfA = getRectFourPoints(a.x2,a.y2,a.w,a.h,a.angle2,true);
+    var pointsOfB = getRectFourPoints(b.x,b.y,108,46,b.angle,true);//
 
     // console.log(b.width);
     // console.log(b.height);
@@ -585,28 +610,72 @@ function doPolygonsIntersect (a, b) {
     // console.log(maxB);
     return true;
 };
+//********************************************************* */
+Car.prototype.collidesWithCar = function (game) {
+    var colliding = false;
+    for (var i = 0; i< parkedCars.length; i++){
+        
+        for (var j; j < SCOPE_OF_TILES.length; j++) {
 
-// Edit it
-// function canDrive(X, Y, tilePaths,game) {
-//     this.game = game;
-//     var canPass = true;
-//     console.log(canPass);
-//     for (var i = 0; i < tilePaths.length; i++) {
-//         var paths = tilePaths[i]; 
-//         var b ={x:paths.xL,y:paths.yT,width:paths.xR-paths.xL,height:paths.yB-paths.yT,angle:0,bool:true};
-//         if(doPolygonsIntersect(b,this.game.car)){
-//             canPass =false;
-//             break;
-//         }
-//         // if ((X > paths.xL && X < paths.xR) &&
-//         //         (Y > paths.yT && Y < paths.yB)) {
-//         //         canPass = false;
-//         //         break;
-//         // }
-//     }
-//     return canPass;
-// }
+            var col = SCOPE_OF_TILES[j].col;
+            var row = SCOPE_OF_TILES[j].row;
+            if (row == game.PK[i].tile.row && col == game.PK[i].tile.col) {
+                if (doPolygonsIntersect(this.game.PK[i], this)) {
+                    colliding = true;
+                    break;
+                }
+           }
+        }
+        
+    }
+    return colliding;
+}
 //*************************************************** */
+STATIONARYX = X_OFFSET;
+STATIONARYY = Y_OFFSET;
+function Car2(game,x,y,spritesheet,tile, width, height) {
+    this.game = game;
+    this.x2 = x;
+    this.y2 = y;
+    // this.origX = x;
+    // this.origY = y;
+    this.angle2 = 0;
+    this.spritesheet = spritesheet;
+    this.tile = tile;
+    this.ctx = game.ctx;
+    this.w = width
+    this.h = height
+    Entity.call(this, game, 638, 445); 
+
+}
+Car2.prototype = new Entity();
+Car2.prototype.update = function () {
+   
+    
+}
+
+Car2.prototype.draw = function () {
+    // this.x2 = (this.game.car.x - X_OFFSET) + this.origX;
+    // this.y2 = (this.game.car.y - Y_OFFSET) + this.origY;
+    var col = this.game.Background.curTile.col;
+    var row = this.game.Background.curTile.row;
+    console.log("CHANGING??? ", row , " , ",col);
+    for (var i = 0; i< parkedCars.length; i++){
+        for (var j; j < SCOPE_OF_TILES.length; j++) {
+            var col = SCOPE_OF_TILES[j].col;
+            var row = SCOPE_OF_TILES[j].row;
+            if (row == game.PK[i].tile.row && col == game.PK[i].tile.col) {
+        //  this.ctx.translate(this.x2 - X_OFFSET, this.y2 - Y_OFFSET); //*************
+            // this.ctx.drawImage(this.spritesheet, this.x2 ,this.y2);
+            // this.ctx.drawImage(this.spritesheet, -(this.w / 2), -(this.h/ 2));
+
+            console.log("true r: " );
+        }
+    }
+}
+    Entity.prototype.draw.call(this);
+
+}
 
 
 // the "main" code begins here
@@ -637,11 +706,25 @@ ASSET_MANAGER.queueDownload("./img/FinalTiles/3,2.jpg");
 ASSET_MANAGER.queueDownload("./img/FinalTiles/3,3.jpg");
 ASSET_MANAGER.queueDownload("./img/FinalTiles/3,4.jpg");
 ASSET_MANAGER.queueDownload("./img/FinalTiles/3,5.jpg");
-ASSET_MANAGER.queueDownload("./img/CarRight.png");
-ASSET_MANAGER.queueDownload("./img/CarRight1.png");
-ASSET_MANAGER.queueDownload("./img/CarUp1.png");
-ASSET_MANAGER.queueDownload("./img/police.png");
 
+ASSET_MANAGER.queueDownload("./img/muscleCar.png");
+
+ASSET_MANAGER.queueDownload("./img/Black_viper.png");
+ASSET_MANAGER.queueDownload("./img/Audi.png");
+ASSET_MANAGER.queueDownload("./img/Mini_truck.png");
+ASSET_MANAGER.queueDownload("./img/Mini_van.png");
+ASSET_MANAGER.queueDownload("./img/Ambulance.png");
+ASSET_MANAGER.queueDownload("./img/taxi.png");
+ASSET_MANAGER.queueDownload("./img/lambo.png");
+ASSET_MANAGER.queueDownload("./img/mercedes.png");
+ASSET_MANAGER.queueDownload("./img/sedan.png");
+ASSET_MANAGER.queueDownload("./img/corvette.png");
+ASSET_MANAGER.queueDownload("./img/ferrari.png");
+ASSET_MANAGER.queueDownload("./img/suv.png");
+ASSET_MANAGER.queueDownload("./img/audiR8.png");
+ASSET_MANAGER.queueDownload("./img/ferrari2.png");
+ASSET_MANAGER.queueDownload("./img/astonMartin.png");
+ASSET_MANAGER.queueDownload("./img/lightBlueAudi.png");
 
 ASSET_MANAGER.downloadAll(function () {
     console.log("starting up da sheild");
@@ -658,6 +741,43 @@ ASSET_MANAGER.downloadAll(function () {
     gameEngine.Background = BG;
     gameEngine.addEntity(BG); 
     //********************
+    //game,x,y,spritesheet,tile
+    parkedCars = [new Car2(gameEngine, 1035, 484,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:1, col:0},116,54),
+                      new Car2(gameEngine, 1080, 315,ASSET_MANAGER.getAsset("./img/Black_viper.png"), {row:0, col:1}, 116, 54),
+                      new Car2(gameEngine, 860, 280,ASSET_MANAGER.getAsset("./img/ferrari2.png"), {row:3, col:4},116,54), 
+                      new Car2(gameEngine, 420, 1252,ASSET_MANAGER.getAsset("./img/ferrari2.png"), {row:0, col:1},116,54), 
+                      new Car2(gameEngine, 1092, 597,ASSET_MANAGER.getAsset("./img/Mini_van.png"), {row:1, col:1},116,54),
+                      new Car2(gameEngine, 298, 589,ASSET_MANAGER.getAsset("./img/suv.png"), {row:3, col:4},116,54), 
+                      new Car2(gameEngine, 1136.5, 1189.3,ASSET_MANAGER.getAsset("./img/muscleCar.png"), {row:0, col:4},116,54), 
+                      new Car2(gameEngine, 5595, 916.8,ASSET_MANAGER.getAsset("./img/audiR8.png"), {row:1, col:4},116,54),
+                      new Car2(gameEngine, 286.1, 909,ASSET_MANAGER.getAsset("./img/lambo.png"), {row:1, col:5},116,54), 
+                      new Car2(gameEngine, 1093, 286,ASSET_MANAGER.getAsset("./img/astonMartin.png"), {row:2, col:3},116,54),
+                      new Car2(gameEngine, 758, 620,ASSET_MANAGER.getAsset("./img/lightBlueAudi.png"), {row:3, col:5},116,54),
+                      new Car2(gameEngine, 219.5, 502.5,ASSET_MANAGER.getAsset("./img/sedan.png"), {row:1, col:5},116,54), 
+                      new Car2(gameEngine, 768, 484,ASSET_MANAGER.getAsset("./img/ferrari.png"), {row:1, col:5},116,54), 
+                      new Car2(gameEngine, 186.8, 939.9,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:1, col:5},116,54), 
+                      new Car2(gameEngine, 1057, 928,ASSET_MANAGER.getAsset("./img/Mini_truck.png"), {row:1, col:5},116,54), 
+                      new Car2(gameEngine, 473, 895,ASSET_MANAGER.getAsset("./img/corvette.png"), {row:0, col:4},116,54), 
+                      new Car2(gameEngine, 1058.9, 934.9,ASSET_MANAGER.getAsset("./img/Mini_van.png"), {row:1, col:5},116,54),
+                      new Car2(gameEngine, 1356, 922,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:1, col:1},116,54), 
+                      new Car2(gameEngine, 195.9, 911.6,ASSET_MANAGER.getAsset("./img/Mini_truck.png"), {row:1, col:0},116,54), 
+                      new Car2(gameEngine, 629, 286,ASSET_MANAGER.getAsset("./img/mercedes.png"), {row:2, col:2},116,54), 
+                      new Car2(gameEngine, 194, 917,ASSET_MANAGER.getAsset("./img/suv.png"), {row:1, col:1},116,54), 
+                      new Car2(gameEngine, 1171, 116,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:3, col:3},116,54),
+                      new Car2(gameEngine, 973.1, 260.2,ASSET_MANAGER.getAsset("./img/astonMartin.png"), {row:0, col:4},116,54),
+                      new Car2(gameEngine, 485, 509,ASSET_MANAGER.getAsset("./img/lambo.png"), {row:1, col:0},116,54)];
+
+
+    for (var i = 0; i < parkedCars.length; i++ ) {
+            gameEngine.addEntity(parkedCars[i]);
+           
+    }
+    gameEngine.PK = parkedCars;
+    // ;
+    // gameEngine.addEntity();
+    // gameEngine.addEntity();
+  
+
 
     var car = new Car(gameEngine);
     // var car1 = new Car1(gameEngine);
