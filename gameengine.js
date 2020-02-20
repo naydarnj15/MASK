@@ -1,3 +1,6 @@
+
+// This game shell was happily copied from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
+
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
@@ -60,7 +63,9 @@ GameEngine.prototype.startInput = function () {
     var that = this;
 
     this.ctx.canvas.addEventListener("keydown", function (e) {
-        if (e.code === "KeyD" || e.code === "ArrowRight") {
+        if (String.fromCharCode(e.which) === ' ') {
+            that.space = true;
+        } else if (e.code === "KeyD" || e.code === "ArrowRight") {
             that.d = true;
             
         } else if (e.code === "KeyS" || e.code === "ArrowDown") {
@@ -81,7 +86,9 @@ GameEngine.prototype.startInput = function () {
 
 
          this.ctx.canvas.addEventListener("keyup", function (e) {
-             if (e.code === "KeyD" || e.code === "ArrowRight"){
+            if (String.fromCharCode(e.which) === ' ') {
+                that.space = false;
+            }   else if (e.code === "KeyD" || e.code === "ArrowRight"){
                  that.d = false;
              } else if (e.code === "KeyS"||e.code === "ArrowDown"){
                  that.s = false;
@@ -169,6 +176,8 @@ Entity.prototype.rotateAndCache = function (image, angle) {
     offscreenCtx.translate(0, 0);
     offscreenCtx.drawImage(image, -(image.width / 2), -(image.height / 2));
     offscreenCtx.restore();
+    //offscreenCtx.strokeStyle = "red";
+    //offscreenCtx.strokeRect(0,0,size,size);
     return offscreenCanvas;
 }
 
