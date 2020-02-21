@@ -12,8 +12,8 @@ function Animation(spriteSheet, startX, startY, frameWidth, frameHeight, frameDu
     this.reverse = reverse;
 }
 
-Animation.prototype.drawFrame = function (tick, ctx, x, y, angle) {
-    var scaleBy = 0.3;
+Animation.prototype.drawFrame = function (tick, ctx, x, y, scaleBy) {
+    var scaleBy = scaleBy || 0.5;
     this.elapsedTime += tick;
     if (this.loop) {
         if (this.isDone()) {
@@ -32,33 +32,15 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, angle) {
         index -= Math.floor(this.spriteSheet.width / this.frameWidth);
         vindex++;
     }
-    //console.log()
-    var frame = this.spriteSheet;
-    
+
     var locX = x;
     var locY = y;
     var offset = vindex === 0 ? this.startX : 0;
-    
-
-    var tempCanvas = document.createElement('canvas');
-    tempCanvas.width = 250;
-    tempCanvas.height = 250;
-    var tempCanvasCtx = tempCanvas.getContext('2d');
-    tempCanvasCtx.save();
-    tempCanvasCtx.drawImage(this.spriteSheet,
+    ctx.drawImage(this.spriteSheet,
         index * this.frameWidth + offset, vindex * this.frameHeight + this.startY,  // source from sheet
         this.frameWidth, this.frameHeight,
-        0, 0,
-        this.frameWidth,
-        this.frameHeight);
-
-
-    var rotatedImage = Entity.prototype.rotateAndCache(tempCanvas, Math.PI / 180 * angle);
-
-    ctx.rotate(Math.PI / 180 * angle / 200);
-    ctx.drawImage(rotatedImage,
-                  locX, locY,
-                  this.frameWidth * scaleBy,
+        locX, locY,
+        this.frameWidth * scaleBy,
         this.frameHeight * scaleBy);
 }
 
@@ -107,7 +89,7 @@ function Background(game) {
                                       {xL:285, xR:609,yT:1296, yB:1535},{xL:609, xR:950 ,yT:1460, yB:1535},
                                       {xL:950, xR: 1421,yT:1204, yB:1535}]};
     this.tileMap[0][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,4.jpg"), width: 1515, height: 1535,
-                          buildings: [{xL:600, xR:1515 ,yT:1380, yB:1535},{xL:0, xR: 204,yT:0, yB:122},
+                          buildings: [{xL:600, xR:1515 ,yT:1380, yB:1535},{xL:0, xR: 204,yT:0, yB:120},
                                       {xL:1145, xR:1515 ,yT:0, yB:1535},{xL:0, xR:1515 ,yT:0, yB:75},
                                       {xL:0, xR:300,yT:207, yB:1045}]};
     this.tileMap[0][5] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/0,1.jpg"), width: 1515, height: 1535,
@@ -115,21 +97,21 @@ function Background(game) {
     this.tileMap[1][0] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,0.jpg"), width: 1160, height: 1260,
                           buildings: [{xL:0, xR:1160 ,yT:0, yB:484},{xL:143, xR:343 ,yT:0, yB:560},
                                       {xL:0, xR:1160 ,yT:930, yB:1260}]};
-    this.tileMap[1][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,1.jpg"), width: 1812, height: 1260,
-                          buildings: [{xL:0, xR:1825 ,yT:0, yB:6},{xL:0, xR:1349 ,yT:0, yB:312},
+    this.tileMap[1][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,1.jpg"), width: 1826, height: 1260,
+                          buildings: [{xL:0, xR:1826 ,yT:0, yB:5},{xL:0, xR:1349 ,yT:0, yB:312},
                                       {xL:0, xR: 1051,yT:0, yB:610},{xL:0, xR:645 ,yT:927, yB:1260},
-                                      {xL:645, xR:1212 ,yT:893, yB:1260},{xL:1212, xR: 1704,yT:941, yB:1260},
-                                      {xL:1747, xR:1812 ,yT:910, yB:1260}]};
+                                      {xL:645, xR:1212 ,yT:893, yB:1260},{xL:1212, xR: 1730,yT:941, yB:1260},
+                                      {xL:1730, xR:1826 ,yT:910, yB:1260}]};
     this.tileMap[1][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,2.jpg"), width: 1623, height: 1259, 
-                          buildings: [{xL:0, xR: 80,yT:-10, yB:6},{xL:289, xR:759,yT:0, yB:570},
+                          buildings: [{xL:0, xR: 70,yT:-10, yB:5},{xL:289, xR:759,yT:0, yB:570},
                                       {xL:759, xR: 1454,yT:10, yB:570},{xL:293, xR:1430 ,yT:888, yB:1259},
-                                      {xL:0, xR:65 ,yT:910, yB:1259}]}; 
+                                      {xL:0, xR:70 ,yT:910, yB:1259}]}; 
     this.tileMap[1][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,3.jpg"), width: 1619, height: 1259,
                           buildings: [{xL:285, xR:1422 ,yT:888, yB:1259},{xL:1613, xR:1619 ,yT:910, yB:1259},
                                       {xL:253, xR:970,yT:2, yB:584},{xL:970, xR:1421 ,yT:0, yB:584}]};
     this.tileMap[1][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,4.jpg"), width: 1826, height: 1260,
-                          buildings: [{xL:876, xR: 1260,yT:0, yB:600},{xL:600, xR:876 ,yT:0, yB:309},
-                                      {xL:1282, xR:1260 ,yT:922, yB:1813},{xL:692, xR:1282 ,yT:901, yB:1260},
+                          buildings: [{xL:876, xR: 1826,yT:0, yB:600},{xL:600, xR:876 ,yT:0, yB:309},
+                                      {xL:1282, xR:1826,yT:922, yB:1813},{xL:692, xR:1826 ,yT:901, yB:1260},
                                       {xL:172, xR:692 ,yT:946, yB:1260},{xL:0, xR:134 ,yT:910, yB:1260}]};
     this.tileMap[1][5] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/1,5.jpg"), width: 1160, height: 1260,
                           buildings: [{xL:0, xR: 1160,yT:940, yB:1260},{xL:0, xR:1160 ,yT:0, yB:477},
@@ -144,14 +126,14 @@ function Background(game) {
                                       {xL:286, xR:1422,yT:0, yB:260}]};
     this.tileMap[2][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/2,4.jpg"), width: 1028, height: 784, 
                           buildings: [{xL: 0, xR: 1028, yT: 0, yB: 784}]};
-    this.tileMap[3][0] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,0.jpg"), width: 1160, height: 928, 
+    this.tileMap[3][0] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,0.jpg"), width: 1158.5, height: 928, 
                           buildings: [{xL:0, xR:1160 ,yT:0, yB:283}, {xL:0,xR:1160,yT:588, yB:928}]};
     this.tileMap[3][1] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,1.jpg"), width: 1829, height: 924,
                          buildings: [{xL:0, xR:1829 ,yT:586, yB:924},{xL:1755, xR:1829 ,yT:0, yB:164},
                                      {xL:1183, xR:1829 ,yT:0, yB:304},{xL:0, xR:1829 ,yT:0, yB:280}]};
     this.tileMap[3][2] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,2.jpg"), width: 1621, height: 924, 
                           buildings: [{xL:0, xR:80,yT:596, yB:924}, {xL:0, xR:72 ,yT:0,yB:295},
-                                      {xL:291, xR:1433,yT:543, yB:924}, {xL:1518, xR:1621,yT:523, yB:924},
+                                      {xL:291, xR:1433,yT:543, yB:924}, {xL:1518, xR:1621,yT:545, yB:924},
                                       {xL:1018, xR:1436,yT:0,yB:217}]};
     this.tileMap[3][3] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,3.jpg"), width: 1618, height: 924, 
                           buildings: [{xL:0, xR:190 ,yT:523, yB:924},{xL:284, xR:1419 ,yT:545, yB:924},
@@ -160,7 +142,7 @@ function Background(game) {
     this.tileMap[3][4] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,4.jpg"), width: 1829, height: 924, 
                           buildings: [{xL:0, xR:1829 ,yT:590, yB:924}, {xL:0, xR:795,yT:0, yB:305},
                                       {xL:790, xR: 1829 ,yT:0, yB:280}]};
-    this.tileMap[3][5] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,5.jpg"), width: 1160, height: 928,
+    this.tileMap[3][5] = {img: ASSET_MANAGER.getAsset("./img/FinalTiles/3,5.jpg"), width: 1158.5, height: 928,
                           buildings: [{xL: 0,xR:1160,yT:621,yB:928}, {xL:0, xR:1160 ,yT:0, yB:276},
                                       {xL:922, xR:1160 ,yT:558, yB:928}, {xL:386, xR: 554,yT:0,yB:323}]};
     this.curTile = {row: 0, col: 1}; // 0,1
@@ -172,7 +154,7 @@ Background.prototype.draw = function () {
     this.ctx.imageSmoothingQuality = 'medium';
     this.ctx.imageSmoothingEnabled = true;
     var tile = this.tileMap[this.curTile.row][this.curTile.col];
-    //console.log("row" , this. curTile.row ," col: " ,this.curTile.col);
+    console.log("row" , this. curTile.row ," col: " ,this.curTile.col);
     // SCOPE_OF_TILES.push(tile);
     // this.distanceTraveledX; how far into tile   SX
     // this.distanceTraveledY;     SY
@@ -185,7 +167,7 @@ Background.prototype.draw = function () {
     var YT =  this.distanceTraveledY - 285;
     var YB = this. distanceTraveledY + 285;
     this.ctx.drawImage(tile.img, XL, YT, 1250, 570, 0,0, 1250, 570);
-    SCOPE_OF_TILES.push({row: this.curTile, col: this.curTile.col}); /// add OFFSETSSS 
+    SCOPE_OF_TILES.push({row:this.curTile.row, col:this.curTile.col}); /// add OFFSETSSS 
       // (tile.img, Source x, source Y,  source width, source height, 0connect , 0connect, resizing w 1250, h 510);
     
    
@@ -204,11 +186,11 @@ Background.prototype.draw = function () {
             }
             var nextL = -t1.width + (625 - this.distanceTraveledX);
             this.ctx.drawImage(t1.img, 0, YT, t1.width, 570, nextL, 0, t1.width + 1.5, 570);
-            SCOPE_OF_TILES.push({row: this.curTile, col: col});
+            SCOPE_OF_TILES.push({row:this.curTile.row, col:col});
          
     } 
 } catch {
-   // console.log("skip left col");
+    console.log("skip left col");
 } try {
     var nextR;
     if (XR > tile.width) {//col++{
@@ -222,12 +204,12 @@ Background.prototype.draw = function () {
             t2 = this.tileMap[this.curTile.row][col2];
             var nextR = 625 + (tile.width - this.distanceTraveledX);
             this.ctx.drawImage(t2.img, 0, YT, 1250, 570, nextR, 0, 1250, 570);
-            SCOPE_OF_TILES.push({row: this.curTile, col: col2});
+            SCOPE_OF_TILES.push({row:this.curTile.row, col:col2});
             //add scope of tiles .push 
        
     }
 } catch {
-   // console.log("skip right col");
+    console.log("skip right col");
 } try {
     if (YT < 0) {//row--    /UP
         var row2 = this.curTile.row == 0 ? 3 :  this.curTile.row - 1;
@@ -237,7 +219,7 @@ Background.prototype.draw = function () {
 
         if (row2 == 0 && (this.curTile.col == 1 || this.curTile.col == 4)) {
             if (this.curTile.col == 1) {
-                this.ctx.drawImage(t4.img, XL - 500, 0, t4.width, t4.height, -200, nextU, t4.width, t4.height);
+                this.ctx.drawImage(t4.img, XL - 500, 0, t4.width, t4.height, -188, nextU, t4.width, t4.height);
             } else if (this.curTile.col == 4) {
                  this.ctx.drawImage(t4.img, XL, 0, t4.width, t4.height, 0, nextU, t4.width, t4.height);
              
@@ -256,21 +238,21 @@ Background.prototype.draw = function () {
            this.ctx.drawImage(t4.img, XL, 0, 1250, t4.height, -1 - scoot, nextU, 1256, t4.height);
 
         }
-        SCOPE_OF_TILES.push({row: row2, col: this.curTile.col});
+        SCOPE_OF_TILES.push({row:row2, col:this.curTile.col});
         if (XR > tile.width) {
             //also do the bottom to the right
             var t5 = this.tileMap[row2][this.curTile.col + 1];
             this.ctx.drawImage(t5.img, 0, 0, 1250, t5.height, nextR - 1.25, nextU, 1252, t5.height);
-            SCOPE_OF_TILES.push({row: row2, col: this.curTile.col + 1});
+            SCOPE_OF_TILES.push({row:row2, col: (this.curTile.col + 1)});
         }  else if (XL < tile.width) {
             var t5 =  this.tileMap[row2][this.curTile.col - 1];
             var nextl = -t5.width + (625 - this.distanceTraveledX);
             this.ctx.drawImage(t5.img, 0, 0, t5.width, t5.height, nextl + 2, nextU, t5.width+3, t5.height);
-            SCOPE_OF_TILES.push({row: row2, col: this.curTile.col - 1});
+            SCOPE_OF_TILES.push({row:row2, col:(this.curTile.col - 1)});
         }
     } 
 } catch {
-    //console.log("skip upper row");
+    console.log("skip upper row");
 } try {
     // var next4;
     if (YB > tile.height) {//row++   DOWN
@@ -288,23 +270,23 @@ Background.prototype.draw = function () {
             var scoot = tile.width - t4.width;
             this.ctx.drawImage(t4.img, XL, 0, 1250, 570, -1 - scoot, nextD, 1258, 570);
         }
-        SCOPE_OF_TILES.push({row: row3, col: this.curTile.col});
+        SCOPE_OF_TILES.push({row:row3, col:this.curTile.col});
         if (XR > tile.width) {
                 //also do the bottom to the right
                 var t5 = this.tileMap[row3][this.curTile.col + 1];
                 this.ctx.drawImage(t5.img, 0, 0, 1250, 570, nextR, nextD, 1252, 570);
-                SCOPE_OF_TILES.push({row: row3, col: this.curTile.col+1});
+                SCOPE_OF_TILES.push({row:row3, col:(this.curTile.col+1)});
             }  else if (XL < tile.width) {
               //  console.log("col", this.curTile.col, " row: ", row);
                 var t5 =  this.tileMap[row3][this.curTile.col - 1];
                 var nextl = -t5.width + (625 - this.distanceTraveledX);
                 this.ctx.drawImage(t5.img, 0, 0, t5.width, 570, nextl + .5, nextD, t5.width + 4, 570);
-                SCOPE_OF_TILES.push({row: row3, col: this.curTile.col - 1});
+                SCOPE_OF_TILES.push({row:row3, col:(this.curTile.col - 1)});
         }
 
     }
 } catch {
-    //console.log("skip lower row");
+    console.log("skip lower row");
 }
 
       /// ADJUST  TILE 2,2 AND 2,3 
@@ -316,209 +298,38 @@ Background.prototype.update = function () {
     var row = this.curTile.row;
     var col = this.curTile.col;
 
-    //console.log("distance X: " + this.distanceTraveledX + " \n distance Y: " + this.distanceTraveledY);
+    console.log("distance X: " + this.distanceTraveledX + " \n distance Y: " + this.distanceTraveledY);
     
     if (this.distanceTraveledX > tileW){
-        STATIONARYX -= tileW; /////////////////
         if ((row === 1 || row == 3) && col == 5) { // if row 1 or 3 
             this.curTile.col = 0;      
         } else {
             this.curTile.col++;
         }
-        this.distanceTraveledX = 1;
+        this.distanceTraveledX = 0;
         
     } else if (this.distanceTraveledX < 0) { // col change
-        STATIONARYX += tileW
         if ((row === 1 || row == 3) && col === 0) { // if row 1 or 3
             this.curTile.col = 5;
         } else {
             this.curTile.col--; 
         }
-        this.distanceTraveledX = this.tileMap[this.curTile.row][this.curTile.col].width - 1;
+        this.distanceTraveledX = this.tileMap[this.curTile.row][this.curTile.col].width;
     } else if (this.distanceTraveledY> tileH) { // down
-        STATIONARYY -= tileH
         if (row === 3 )  {
             this.curTile.row = 0;
         } else {
             this.curTile.row++;
         }
-         this.distanceTraveledY = 1;
+         this.distanceTraveledY = 0;
     } else if ( this.distanceTraveledY < 0) { // up
-        STATIONARYY += tileH
         if (row === 0 )  {
             this.curTile.row = 3;
         } else {
             this.curTile.row--;
         }
-        this.distanceTraveledY = this.tileMap[this.curTile.row][this.curTile.col].height - 1; // row change
+        this.distanceTraveledY = this.tileMap[this.curTile.row][this.curTile.col].height; // row change
     }
-};
-
-
-
-
-function Person(game) {
-    this.game = game;
-    //this.animation = new Animation(ASSET_MANAGER.getAsset("./img/jorge1.png"), 0, 0, 250, 250, 0.05, 1, true, true);
-    //this.straightAnimation = new Animation(ASSET_MANAGER.getAsset("./img/jorge.png"), 0, 0, 250, 250, 0.05, 7, false, true);
-
-    this.animation = new Animation(ASSET_MANAGER.getAsset("./img/RedPersonStanding.png"), 0, 0, 250, 250, 0.05, 1, true, true);
-    this.straightAnimation = new Animation(ASSET_MANAGER.getAsset("./img/Red Person.png"), 0, 0, 250, 250, 0.08, 7, false, true);
-    //this.firstanimation = new Animation(ASSET_MANAGER.getAsset("./img/first.png"), 0, 0, 250, 250, 0.09, 1, false, true);
-    //this.secondanimation = new Animation(ASSET_MANAGER.getAsset("./img/second.png"), 0, 0, 250, 250, 0.09, 1, false, true);
-    //this.thirdanimation = new Animation(ASSET_MANAGER.getAsset("./img/third.png"), 0, 0, 250, 250, 0.09, 1, false, true);
-    //this.fourthanimation = new Animation(ASSET_MANAGER.getAsset("./img/fourth.png"), 0, 0, 250, 250, 0.09, 1, false, true);
-    //this.fifthanimation = new Animation(ASSET_MANAGER.getAsset("./img/fifth.png"), 0, 0, 250, 250, 0.09, 1, false, true);
-    //this.sixthanimation = new Animation(ASSET_MANAGER.getAsset("./img/sixth.png"), 0, 0, 250, 250, 0.09, 1, false, true);
-    //this.seventhanimation = new Animation(ASSET_MANAGER.getAsset("./img/seventh.png"), 0, 0, 250, 250, 0.09, 1, false, true);
-
-    //animations.push(this.firstanimation);
-    //animations.push(this.secondanimation);
-    //animations.push(this.thirdanimation);
-    //animations.push(this.fourthanimation);
-    //animations.push(this.fifthanimation);
-    //animations.push(this.sixthanimation);
-    //animations.push(this.seventhanimation);
-    this.setNotIt();
-    this.straight = false;
-    this.up = false;
-    this.down = false;
-    this.left = false;
-    this.right = false;
-    this.radius = 100;
-    this.ground = 400;
-    this.speed = 0;
-    this.angle = 0;
-    this.mod = 0;
-    Entity.call(this, game, 700, 400);
-}
-
-Person.prototype = new Entity();
-Person.prototype.constructor = Person;
-
-Person.prototype.update = function () {
-    if (this.game.d) {
-        this.right = true;
-        this.angle += 5;
-        //this.x += 5;
-        //this.speed =1;
-    }
-    if (this.game.s) {
-        this.down = true;
-        this.speed = 0;
-    }
-    if (this.game.w) {
-        this.up = true;
-        this.mod = 1;
-        this.speed = 2;
-        //this.y += 5;
-    }
-    if (this.game.a) {
-        this.left = true;
-        this.angle -= 5;
-        //this.x -= 5;
-        //this.speed =1;
-    }
-    if (this.right) {
-        if (this.straightAnimation.isDone()) {
-            this.straightAnimation.elapsedTime = 0;
-            this.right = false;
-        }
-    }
-    if(this.game.space && this.it){
-        //console.log("are you in here");
-        for (var i = 0; i < this.game.entities.length; i++) { 
-            var ent = this.game.entities[i];
-            var dist = this.game.car.distance(this, ent);
-            var distance = Math.abs(dist);
-            if(distance < 100 && ent !== this){
-                this.removeFromWorld = true;
-                ent.setIt();
-                break;
-            }
-            
-        }
-    
-    
-        }
-    if (this.left) {
-        if (this.straightAnimation.isDone()) {
-            this.straightAnimation.elapsedTime = 0;
-            this.left = false;
-        }
-    }
-    if (this.up) {
-        
-        if (this.straightAnimation.isDone()) {
-            this.straightAnimation.elapsedTime = 0;
-            this.up = false;
-        }
-    }
-    if (this.down) {
-        if (this.straightAnimation.isDone()) {
-            this.straightAnimation.elapsedTime = 0;
-            this.down = false;
-        }
-    }
-        var travelX = (this.speed) * Math.cos(Math.PI / 180 * this.angle); //********* */
-        var travelY = (this.speed) * Math.sin(Math.PI / 180 * this.angle);
-        this.x += travelX;
-        this.y += travelY;
-
-        this.prevOFFx = X_OFFSET; ////************ */
-        this.prevOFFy = Y_OFFSET; ///************** */
-        X_OFFSET += travelX; //****
-        Y_OFFSET += travelY; //*****
-        // STATIONARYX += travelX;
-        // STATIONARYY +=travelY;
-        this.prevX =  this.game.Background.distanceTraveledX;
-        this.prevY =  this.game.Background.distanceTraveledY;
-        this.game.Background.distanceTraveledX += travelX; //*****
-        this.game.Background.distanceTraveledY += travelY; //*****
-    // this.x += (this.speed) * Math.cos(Math.PI / 180 * this.angle);
-    // //console.log(this.x);
-    // this.y += (this.speed) * Math.sin(Math.PI / 180 * this.angle);
-    //console.log(this.y);
-    //console.log(this.x);
-
-    Entity.prototype.update.call(this);
-}
-
-Person.prototype.draw = function (ctx) {
-
-    //var tempCanvas = document.createElement('canvas');
-    //var tempCanvasCtx = tempCanvas.getContext('2d');
-    //this.drawFrame(this.game.clockTick, tempCanvasCtx, this.x, this.y, this.angle);
-    //var rotatedImage = Entity.prototype.rotateAndCache(tempCanvas, angle);
-    //ctx.rotate(Math.PI / 180 * this.angle);
-    
-    if (this.right && this.speed > 0) {
-        //this.drawFrame(this.game.clockTick, tempCanvas, this.x, this.y, angle);
-        //var rotate = Entity.prototype.rotateAndCache(this.straightAnimation.spriteSheet, this.angle);
-        //this.drawFrame(this.game.clockTick, tempCanvas, this.x, this.y, angle);
-        //var rotate = Entity.prototype.rotateAndCache(this.spriteSheet, angle);
-        //for (var i = 0; i < animations.length; i++) {
-        //    animations[i].drawFrame(this.game.clockTick, ctx, this.x, this.y, this.angle);
-        //}
-        this.straightAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.angle);
-    } else if (this.left && this.speed > 0) {
-        this.straightAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.angle);
-    } else if (this.up) {
-        //this.straightAnimation.loop = true;
-        this.straightAnimation.drawFrame(this.game.clockTick, ctx, this.x, this.y, this.angle);
-    } else {
-        //this.straightAnimation.loop = false;
-        this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y,this.angle);
-    }
-    Entity.prototype.draw.call(this);
-}
-
-Person.prototype.setIt = function () {
-    this.it = true;
-};
-
-Person.prototype.setNotIt = function () {
-    this.it = false;
 };
 
 //*************************
@@ -540,7 +351,7 @@ function Car(game,x,y) {
     this.angle = 0;
     this.car = new Image();
     this.car.src = "./img/muscleCar.png";
-    this.setNotIt();
+
     this.drag =0.95;
     this.angularDrag =0.95;
     this.turnSpeed=0.002;
@@ -558,7 +369,8 @@ function Car(game,x,y) {
 Car.prototype = new Entity();
 Car.prototype.constructor = Car;
 Car.prototype.update = function () {
-if(this.it){
+console.log("car x: " , this.x, " y : ", this.y);
+console.log("angle: ", this.angle);
      if (this.game.w) {
         if (this.speed < this.maxSpeed) {
             this.speed += 2;
@@ -601,34 +413,7 @@ if(this.it){
     } 
     if(this.speed>0) this.speed-=1;
     if(this.speed<0) this.speed+=1;
-    //console.log(this.game.entities.length);
-    //console.log(this.it);
-    if(this.game.space && this.it){
-        for (var i = 0; i < this.game.entities.length; i++) { 
-            var ent = this.game.entities[i];
-            var dist = this.distance(this, ent);
-            var distance = Math.abs(dist);
-            //console.log(distance);
-                var str = ent.spritesheet.src;
-                // var xx =ent.car.x;
-                // var yy =ent.car.y;
-                if(distance < 300 && ent !== this){
-                    console.log(ent.spritesheet.src);
-                    
-                     //ent.spritesheet.src = this.car.src;
-                    // ent.car.x = this.car.x;
-                    // ent.car.y = this.car.y;
-                     this.car.src= ent.spritesheet.src;
-                    // this.car.x =xx;
-                    // this.car.y =yy;
-                    break;
-                }
-            
-            
-        }
-    
-    }
-}
+
     Entity.prototype.update.call(this);
 }
 Car.prototype.canPass = function (X,Y,tilePaths) {
@@ -660,8 +445,7 @@ Car.prototype.canPass = function (X,Y,tilePaths) {
     return canPass;
 }
 Car.prototype.draw = function (ctx) {
-    //console.log(this.x);
-    //console.log(this.y);
+    
     var col = this.game.Background.curTile.col;
     var row = this.game.Background.curTile.row;
     //if(doPolygonsIntersect())
@@ -680,35 +464,76 @@ Car.prototype.draw = function (ctx) {
         this.prevOFFy = Y_OFFSET; ///************** */
         X_OFFSET += travelX; //****
         Y_OFFSET += travelY; //*****
-        // STATIONARYX += travelX;
-        // STATIONARYY +=travelY;
         this.prevX =  this.game.Background.distanceTraveledX;
         this.prevY =  this.game.Background.distanceTraveledY;
         this.game.Background.distanceTraveledX += travelX; //*****
         this.game.Background.distanceTraveledY += travelY; //*****
 
 
+        //*********************
+       //************************************** */
+        //  PASSEDMAPS = {length: 0,LCount: 638,  height: 0, HCount: 345};
+        // PASSEDMAPS.length += travelX;
+        // PASSEDMAPS.height += travelY;
+        // if (PASSEDMAPS.length >= 8400) {
+        //     PASSEDMAPS.LCount++;
+        //     PASSEDMAPS.length = 0;
+
+        // } else if (PASSEDMAPS.length <= -7400 || this.x <0) {
+        //     PASSEDMAPS.LCount--;
+        //     PASSEDMAPS.length = 0;
+        //     console.log("IN <");
+        // }
+
+        // if (PASSEDMAPS.height >= 3600) {
+        //     PASSEDMAPS.HCount++;
+        //     PASSEDMAPS.height = 0;
+
+        // } else if (PASSEDMAPS.height <= -3700) {
+        //     PASSEDMAPS.HCount--;
+        //     PASSEDMAPS.height = 0;
+        // }
+
+        if (this.x <= -1450) {
+            
+            PASSEDMAPS.LCount = Math.floor(this.x / 10014);
+
+        } else if (this.x > 7600) {
+            PASSEDMAPS.LCount = Math.ceil(this.x / 16164);
+        } else {
+            PASSEDMAPS.LCount = 0;
+        }
+
+        if (this.y  > 0) {
+            PASSEDMAPS.HCount = Math.floor(this.y / 4550);
+
+        } else if (this.y <= 0) { 
+            PASSEDMAPS.HCount = Math.floor(this.y / 4217); ;
+        }
+
+
+
+        console.log(PASSEDMAPS);
+        //****************************
+
+//************************************************ */
     } 
     // console.log("x: ", this.x, "y: ", this.y, " speed: ", this.speed);
     else {
         this.speed = 0;
         if(this.game.w){
             this.game.w =false;
-            this.game.a =false;
-            this.game.d =false;
         }
         if(this.game.s){
             this.game.s = false;
-            this.game.a =false;
-            this.game.d =false;
         }
-        var travelX = (this.speed) * Math.cos(Math.PI / 180 * this.angle); //********* */
-        var travelY = (this.speed) * Math.sin(Math.PI / 180 * this.angle);
+        // var travelX = (this.speed) * Math.cos(Math.PI / 180 * this.angle); //********* */
+        // var travelY = (this.speed) * Math.sin(Math.PI / 180 * this.angle);
         this.collide += 1; 
         // this.game.Background.distanceTraveledX += travelX; //*****
         // this.game.Background.distanceTraveledY += travelY;
-         X_OFFSET += travelX; //****
-         Y_OFFSET += travelY;
+        //  X_OFFSET += travelX; //****
+        //  Y_OFFSET += travelY;
         this.game.Background.distanceTraveledX = this.prevX; //*****
         this.game.Background.distanceTraveledY = this.prevY; //*****
         //  this.game.Background.distanceTraveledX -= travelX; //*****
@@ -736,46 +561,12 @@ function rotatePoint(pivot, point, angle) {
     return [x, y];
   };
 
-//********************************************************* */
-Car.prototype.collidesWithCar = function (game) {
-    var colliding = false;
-    // for (var i = 0; i< parkedCars.length; i++){
-    //     for (var j; j < SCOPE_OF_TILES.length; j++) {
-    //         var col = SCOPE_OF_TILES[j].col;
-    //         var row = SCOPE_OF_TILES[j].row;
-    //         if (row == game.PK[i].tile.row && col == game.PK[i].tile.col) {
-    //             if (doPolygonsIntersect(this.game.PK[i], this)) {
-    //                 colliding = true;
-    //                 break;
-    //             }
-    //        }
-    //     }
-    // }
-    return colliding;
-}
-Car.prototype.setIt = function () {
-    this.it = true;
-};
-
-Car.prototype.setNotIt = function () {
-    this.it = false;
-};
-Car.prototype.distance = function (a,b) {
-    var dx = a.x - b.x;
-    var dy = a.y - b.y;
-    return Math.sqrt(dx * dx + dy * dy);
-};
-
-
-
-
-
 
 function getRectFourPoints(x,y, width, height, ang,isDeg =false,) {
    
     var pivot =[x+width/2, y+height/2];
-    //console.log(x+width/2);
-    //console.log(y+height/2);
+    // console.log(x+width/2);
+    // console.log(y+height/2);
 	if(isDeg) ang = ang * (Math.PI / 180);
     var point = [];
     var point0 =rotatePoint(pivot,[x,y],ang);
@@ -862,7 +653,7 @@ function doPolygonsIntersect (a, b) {
             // if there is no overlap between the projects, the edge we are looking at separates the two
             // polygons, and we know there is no overlap
             if (maxA < minB || maxB < minA) {
-                console.log("polygons don't intersect!");
+                // console.log("polygons don't intersect!");
                 return false;
             }
         }
@@ -873,76 +664,41 @@ function doPolygonsIntersect (a, b) {
     // console.log(maxB);
     return true;
 };
+//********************************************************* */
+Car.prototype.collidesWithCar = function (game) {
+    var colliding = false;
+    for (var i = 0; i< parkedCars.length; i++){
+        for (var j = 0; j < SCOPE_OF_TILES.length; j++) {
+            var col = SCOPE_OF_TILES[j].col;
+            var row = SCOPE_OF_TILES[j].row;
+            if (row == game.PK[i].tile.row && col == game.PK[i].tile.col) {
 
-
-
-
-function stationaryCar(game) {
-    this.x =0;
-    this.y =0;
-    this.speed =0;
-    this.angle =0;
-    this.game =game;
-    this.car = new Image();
-    this.car.src = "./img/Audi.png";
-    this.setNotIt();
-    Entity.call(this, game, 938, 745); 
-
-
+                if (doPolygonsIntersect(this.game.PK[i], this)) {//////////
+                    colliding = true;
+                    break;
+                }
+           }
+        }
+    }
+    return colliding;
 }
 
-stationaryCar.prototype = new Entity();
-stationaryCar.prototype.constructor = stationaryCar;
-stationaryCar.prototype.update = function () {
-    console.log(this.x);
-    console.log(this.y);
-    Entity.prototype.update.call(this);
-}
-
-stationaryCar.prototype.reset = function () {
-}
-
-stationaryCar.prototype.draw = function (ctx) {
-    
-   if(this.it){
-    this.x += (0) * Math.cos(Math.PI / 180 * 0);
-    this.y += (0) * Math.sin(Math.PI / 180 * 0);
-   }
-    ctx.save();
-    ctx.translate(this.x- X_OFFSET, this.y-Y_OFFSET);
-    ctx.rotate(Math.PI / 180 * 0);
-    ctx.drawImage(this.car, -(this.car.width / 2), -(this.car.height / 2));
-    ctx.restore();
-    
-    Entity.prototype.draw.call(this);
-}
-
-stationaryCar.prototype.setIt = function () {
-    this.it = true;
-};
-
-stationaryCar.prototype.setNotIt = function () {
-    this.it = false;
-};
-
-
+var PASSEDMAPS = {length:  638, LCount: 0,  height:345, HCount: 0};
+// when car has been left behind DD TO PARKED CAR LIST WITH COORDS
 //*************************************************** */
-STATIONARYX = X_OFFSET;
-STATIONARYY = Y_OFFSET;
 function Car2(game,x,y,spritesheet,tile, width, height) {
     this.game = game;
     this.x2 = x;
     this.y2 = y;
     // this.origX = x;
     // this.origY = y;
-    //this.setNotIt();
-    this.angle2 = 0;
+    this.angle2 = -270;
     this.spritesheet = spritesheet;
     this.tile = tile;
-    this.ctx = game.ctx;
+    this.ctx1 = game.ctx;
     this.w = width
     this.h = height
-    Entity.call(this, game, x, y); 
+    Entity.call(this, game, 638, 445); 
 
 }
 Car2.prototype = new Entity();
@@ -950,24 +706,21 @@ Car2.prototype.update = function () {
 }
 
 Car2.prototype.draw = function () {
-    // this.x2 = (this.game.car.x - X_OFFSET) + this.origX;
-    // this.y2 = (this.game.car.y - Y_OFFSET) + this.origY;
-    var col = this.game.Background.curTile.col;
-    var row = this.game.Background.curTile.row;
-    //console.log("CHANGING??? ", SCOPE_OF_TILES);
-    for (var i = 0; i < parkedCars.length; i++){
-        //  for (var j; j < SCOPE_OF_TILES.length; j++) {
-        //      var col = SCOPE_OF_TILES[j].col;
-        //      var row = SCOPE_OF_TILES[j].row;
-        //      if (row == this.game.PK[i].tile.row && col == this.game.PK[i].tile.col) {
-        //     //  this.ctx.translate(this.x2 - X_OFFSET, this.y2 - Y_OFFSET); //*************
-             this.ctx.drawImage(this.spritesheet, this.x2 - X_OFFSET ,this.y2 - Y_OFFSET);
-            // this.ctx.drawImage(this.spritesheet, -(this.w / 2), -(this.h/ 2));
+        for (var j = 0; j < SCOPE_OF_TILES.length; j++) {
+              var c = SCOPE_OF_TILES[j].col;
+              var r = SCOPE_OF_TILES[j].row;
+             if (r == this.tile.row && c == this.tile.col) {
+                 // this.ctx.translate(this.x2 - X_OFFSET, this.y2 - Y_OFFSET); //*************
+                //    this.ctx1.save();
+                //    this.ctx1.rotate(Math.PI / 180 * this.angle2);
+                var placementX = this.x2 + (PASSEDMAPS.LCount * 9217);
+                var placementY =  this.y2 + (PASSEDMAPS.HCount * 4502);
+                this.ctx1.drawImage(this.spritesheet, placementX  - X_OFFSET , placementY  - Y_OFFSET);
+                //    this.ctx1.restore();
 
-            //console.log("true r: " );
-        //  }
-    //  }
-}
+            }
+     
+        }
     Entity.prototype.draw.call(this);
 
 }
@@ -1004,12 +757,6 @@ ASSET_MANAGER.queueDownload("./img/FinalTiles/3,5.jpg");
 
 ASSET_MANAGER.queueDownload("./img/muscleCar.png");
 
-ASSET_MANAGER.queueDownload("./img/RedPersonStanding.png");
-ASSET_MANAGER.queueDownload("./img/Red Person.png");
-ASSET_MANAGER.queueDownload("./img/CarRight.png");
-ASSET_MANAGER.queueDownload("./img/police.png");
-ASSET_MANAGER.queueDownload("./img/police1.png");
-
 ASSET_MANAGER.queueDownload("./img/Black_viper.png");
 ASSET_MANAGER.queueDownload("./img/Audi.png");
 ASSET_MANAGER.queueDownload("./img/Mini_truck.png");
@@ -1038,52 +785,57 @@ ASSET_MANAGER.downloadAll(function () {
     gameEngine.start();
     
     //********************
-    var BG = new Background(gameEngine);
-    var person = new Person(gameEngine);
-    person.setIt();
-    var car = new Car(gameEngine);
-    //var car1 = new stationaryCar(gameEngine);
+    var BG = new Background(gameEngine)
     gameEngine.Background = BG;
-    //car.setIt();
-    gameEngine.car = car;
+    gameEngine.addEntity(BG); 
     //********************
     //game,x,y,spritesheet,tile
-   parkedCars = [new Car2(gameEngine, 1035, 484,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:1, col:0},116,54),
-                    //   new Car2(gameEngine, 1080, 315,ASSET_MANAGER.getAsset("./img/Black_viper.png"), {row:0, col:1}, 116, 54),
-                    //   new Car2(gameEngine, 860, 280,ASSET_MANAGER.getAsset("./img/ferrari2.png"), {row:3, col:4},116,54), 
-                    //   new Car2(gameEngine, 420, 1252,ASSET_MANAGER.getAsset("./img/ferrari2.png"), {row:0, col:1},116,54), 
-                    //   new Car2(gameEngine, 1092, 597,ASSET_MANAGER.getAsset("./img/Mini_van.png"), {row:1, col:1},116,54),
-                    //   new Car2(gameEngine, 298, 589,ASSET_MANAGER.getAsset("./img/suv.png"), {row:3, col:4},116,54), 
-                    //   new Car2(gameEngine, 1136.5, 1189.3,ASSET_MANAGER.getAsset("./img/muscleCar.png"), {row:0, col:4},116,54), 
-                    //   new Car2(gameEngine, 5595, 916.8,ASSET_MANAGER.getAsset("./img/audiR8.png"), {row:1, col:4},116,54),
-                    //   new Car2(gameEngine, 286.1, 909,ASSET_MANAGER.getAsset("./img/lambo.png"), {row:1, col:5},116,54), 
-                    //   new Car2(gameEngine, 1093, 286,ASSET_MANAGER.getAsset("./img/astonMartin.png"), {row:2, col:3},116,54),
-                    //   new Car2(gameEngine, 758, 620,ASSET_MANAGER.getAsset("./img/lightBlueAudi.png"), {row:3, col:5},116,54),
-                    //   new Car2(gameEngine, 219.5, 502.5,ASSET_MANAGER.getAsset("./img/sedan.png"), {row:1, col:5},116,54), 
-                    //   new Car2(gameEngine, 768, 484,ASSET_MANAGER.getAsset("./img/ferrari.png"), {row:1, col:5},116,54), 
-                    //   new Car2(gameEngine, 186.8, 939.9,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:1, col:5},116,54), 
-                    //   new Car2(gameEngine, 1057, 928,ASSET_MANAGER.getAsset("./img/Mini_truck.png"), {row:1, col:5},116,54), 
-                    //   new Car2(gameEngine, 473, 895,ASSET_MANAGER.getAsset("./img/corvette.png"), {row:0, col:4},116,54), 
-                    //   new Car2(gameEngine, 1058.9, 934.9,ASSET_MANAGER.getAsset("./img/Mini_van.png"), {row:1, col:5},116,54),
-                    //   new Car2(gameEngine, 1356, 922,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:1, col:1},116,54), 
-                    //   new Car2(gameEngine, 195.9, 911.6,ASSET_MANAGER.getAsset("./img/Mini_truck.png"), {row:1, col:0},116,54), 
-                    //   new Car2(gameEngine, 629, 286,ASSET_MANAGER.getAsset("./img/mercedes.png"), {row:2, col:2},116,54), 
-                    //   new Car2(gameEngine, 194, 917,ASSET_MANAGER.getAsset("./img/suv.png"), {row:1, col:1},116,54), 
-                    //   new Car2(gameEngine, 1171, 116,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:3, col:3},116,54),
-                    //   new Car2(gameEngine, 973.1, 260.2,ASSET_MANAGER.getAsset("./img/astonMartin.png"), {row:0, col:4},116,54),
-                    //   new Car2(gameEngine, 485, 509,ASSET_MANAGER.getAsset("./img/lambo.png"), {row:1, col:0},116,54)
-                ];
-     gameEngine.addEntity(BG); 
+    parkedCars = [
+                      new Car2(gameEngine, 590, 950,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:0, col:1},116,54),
+                      new Car2(gameEngine, 1080, 315,ASSET_MANAGER.getAsset("./img/Black_viper.png"), {row:0, col:1}, 116, 54),
+                      new Car2(gameEngine, 1080, 784,ASSET_MANAGER.getAsset("./img/ferrari2.png"), {row:0, col:1},116,54), 
+                      new Car2(gameEngine, -104, 2470,ASSET_MANAGER.getAsset("./img/ferrari2.png"), {row:1, col:1},116,54), 
+                      new Car2(gameEngine, 3004, 1192,ASSET_MANAGER.getAsset("./img/Mini_van.png"), {row:0, col:2},116,54),
+                      new Car2(gameEngine, 1981, 3703,ASSET_MANAGER.getAsset("./img/suv.png"), {row:3, col:2},116,54), 
+                      new Car2(gameEngine, 2238, 3099,ASSET_MANAGER.getAsset("./img/muscleCar.png"), {row:2, col:2},116,54), 
+                      new Car2(gameEngine, 4157, 3110,ASSET_MANAGER.getAsset("./img/audiR8.png"), {row:2, col:3},116,54),
+                      new Car2(gameEngine, 4510, 3093,ASSET_MANAGER.getAsset("./img/taxi.png"), {row:2, col:3},116,54), 
+                      new Car2(gameEngine, 433, 3716,ASSET_MANAGER.getAsset("./img/astonMartin.png"), {row:3, col:3},116,54),
+                      new Car2(gameEngine, 3374, 1136,ASSET_MANAGER.getAsset("./img/lightBlueAudi.png"), {row:0, col:3},116,54),
+                      new Car2(gameEngine, 3345, 1271,ASSET_MANAGER.getAsset("./img/sedan.png"), {row:0, col:3},116,54), 
+                      new Car2(gameEngine, 5243, 834,ASSET_MANAGER.getAsset("./img/ferrari.png"), {row:0, col:4},116,54), 
+                      new Car2(gameEngine, 5725, 846,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:0, col:4},116,54), 
+                      new Car2(gameEngine, 5724, 1121,ASSET_MANAGER.getAsset("./img/corvette.png"), {row:0, col:4},116,54), 
+                      new Car2(gameEngine, 5909, 1217,ASSET_MANAGER.getAsset("./img/Mini_truck.png"), {row:0, col:4},116,54), 
+                      new Car2(gameEngine, 5212, 375,ASSET_MANAGER.getAsset("./img/Mini_van.png"), {row:0, col:4},116,54),
+                      new Car2(gameEngine, 6448, 2496,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:1, col:4},116,54), 
+                      new Car2(gameEngine, 7609, 2570,ASSET_MANAGER.getAsset("./img/Mini_truck.png"), {row:1, col:5},116,54), 
+                      new Car2(gameEngine, -406, 3861,ASSET_MANAGER.getAsset("./img/mercedes.png"), {row:3, col:0},116,54), 
+                      new Car2(gameEngine, 184, 4193,ASSET_MANAGER.getAsset("./img/suv.png"), {row:3, col:1},116,54), 
+                       new Car2(gameEngine, 4331, 3716,ASSET_MANAGER.getAsset("./img/Audi.png"), {row:3, col:3},116,54),
+                       new Car2(gameEngine, 2323, 3727,ASSET_MANAGER.getAsset("./img/astonMartin.png"), {row:3, col:2},116,54),
+                       new Car2(gameEngine, 3335, 52,ASSET_MANAGER.getAsset("./img/lambo.png"), {row:0, col:3},116,54)];
 
-    gameEngine.addEntity(car);
 
     for (var i = 0; i < parkedCars.length; i++ ) {
             gameEngine.addEntity(parkedCars[i]);
            
     }
+    gameEngine.PK = parkedCars;
+    // gameEngine.addEntity();
+    // gameEngine.addEntity();
+  
 
-    //gameEngine.addEntity(car1);
-    gameEngine.addEntity(person);
 
-    
+    var car = new Car(gameEngine);
+    // var car1 = new Car1(gameEngine);
+    // var car2 = new Car2(gameEngine);
+    // var car3 = new Car3(gameEngine);
+    gameEngine.car = car;
+    gameEngine.addEntity(car);
+    // gameEngine.addEntity(car1);
+    // gameEngine.addEntity(car2);
+    // gameEngine.addEntity(car3);
+    // var police = new Police(gameEngine);
+    // gameEngine.addEntity(police);
 });
