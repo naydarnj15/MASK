@@ -1151,8 +1151,8 @@ ASSET_MANAGER.queueDownload("./img/astonMartin.png"); // 270
 ASSET_MANAGER.queueDownload("./img/lightBlueAudi.png"); // 270
 ASSET_MANAGER.queueDownload("./img/Red Person.png"); // 0 
 ASSET_MANAGER.queueDownload("./img/RedPersonStanding.png"); 
-ASSET_MANAGER.queueDownload("./img/RedPersonStandingSmall.png");
-ASSET_MANAGER.queueDownload("./img/jorgeSmall.png");
+//ASSET_MANAGER.queueDownload("./img/RedPersonStandingSmall.png");
+//ASSET_MANAGER.queueDownload("./img/jorgeSmall.png");
 ASSET_MANAGER.queueDownload("./img/wasted.jpg"); 
 
 ASSET_MANAGER.downloadAll(function () {
