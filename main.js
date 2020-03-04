@@ -375,8 +375,8 @@ PlayGame.prototype.draw = function (ctx) {
     //if (this.game.mouse) { ctx.fillStyle = "navy"; }
     //ctx.fillText("Click to Play!", this.x, this.y);
     ctx.font = "18pt Impact";
-    console.log(this.game.car.collide);
-    if (this.game.car.collide < 9) {
+    //console.log(this.game.car.collide);
+    if (this.game.car.collide <= 10) {
         //ctx.fillText("Use arrow keys/WASD to move the car and the person.",
         //this.x-200, this.y+100);
         ctx.fillStyle = "yellow";
@@ -385,11 +385,11 @@ PlayGame.prototype.draw = function (ctx) {
             ctx.fillText("Mission: Find the yellow lamborghini and bring it back to the starting location", this.x + 50, this.y - 300);
         } else if (this.game.car.missionComplete) {
             //console.log(this.game.car.missionComplete);
-            ctx.fillText("You have completed the first mission", this.x + 50, this.y - 200);
+            ctx.fillText("You have completed the first mission, Hit enter to play again", this.x + 50, this.y - 200);
         }
     }else {
         ctx.fillStyle = "yellow";
-            ctx.fillText("Your are not a great theif. Please try again by pressing enter", this.x + 50, this.y - 100);
+            ctx.fillText("Your are not a great theif. Please play again by press enter", this.x + 50, this.y - 100);
         }
     
 }
@@ -412,7 +412,7 @@ function Person(game, x, y) {
     this.ground = 400;
     this.prevX = 638;
     this.prevY = 345;
-    this.maxSpeedPerson = 2;
+    this.maxSpeedPerson = 3;
     this.speed = 0;
     this.x = x;
     this.y = y;
@@ -497,20 +497,107 @@ Person.prototype.update = function () {
             this.down = false;
         }
     }
-    var travelX = (this.speed) * Math.cos(Math.PI / 180 * this.angle); //********* */
-    var travelY = (this.speed) * Math.sin(Math.PI / 180 * this.angle);
-    this.x += travelX;
-    this.y += travelY;
 
-    this.prevOFFx = X_OFFSET; ////************ */
-    this.prevOFFy = Y_OFFSET; ///************** */
-    X_OFFSET += travelX; //****
-    Y_OFFSET += travelY; //*****
 
-    this.prevX =  this.game.Background.distanceTraveledX;
-    this.prevY =  this.game.Background.distanceTraveledY;
-    this.game.Background.distanceTraveledX += travelX; //*****
-    this.game.Background.distanceTraveledY += travelY; //*****
+
+
+    var col = this.game.Background.curTile.col;
+    var row = this.game.Background.curTile.row;
+    //console.log("row " , row, "col: " , col);
+    //console.log(row);
+    //if(doPolygonsIntersect())
+    
+    
+    if (this.game.car.canPass(this.game.Background.distanceTraveledX, this.game.Background.distanceTraveledY,
+                 this.game.Background.tileMap[row][col].buildings)) { //******************************** */
+
+        var travelX = (this.speed) * Math.cos(Math.PI / 180 * this.angle); //********* */
+        var travelY = (this.speed) * Math.sin(Math.PI / 180 * this.angle);
+        this.x += travelX;
+        this.y += travelY;
+
+        this.prevOFFx = X_OFFSET; ////************ */
+        this.prevOFFy = Y_OFFSET; ///************** */
+         console.log(travelX,travelY);
+        // console.log(Y_OFFSET);
+        // if(this.game.person.speed =0){
+        //     X_OFFSET += travelX; //****
+        // Y_OFFSET += travelY; //*****
+        // }
+        X_OFFSET += travelX; //****
+        Y_OFFSET += travelY; //*****
+        this.prevX =  this.game.Background.distanceTraveledX;
+        this.prevY =  this.game.Background.distanceTraveledY;
+        this.game.Background.distanceTraveledX += travelX; //*****
+        this.game.Background.distanceTraveledY += travelY; //*****
+
+
+        //*********************
+       //************************************** */
+        
+       if (this.x <= -1450) {
+            
+        PASSEDMAPS.LCount = Math.floor(this.x / 10094);
+
+    } else if (this.x > 7600) {
+        PASSEDMAPS.LCount = Math.ceil(this.x / 16164);
+    } else {
+        PASSEDMAPS.LCount = 0;
+    }
+
+    if (this.y  >= 0) {
+        PASSEDMAPS.HCount = Math.floor(this.y / 4400);
+
+    } else if (this.y < 0) { 
+        PASSEDMAPS.HCount = Math.floor(this.y / 4750); ;
+    }
+
+
+
+        //****************************
+
+//************************************************ */
+    } 
+    else {
+        console.log(this.speed);
+        this.speed = 0;
+        if(this.game.w){
+            this.game.w =false;
+        }
+        if(this.game.s){
+            this.game.s = false;
+        }
+        
+        this.game.Background.distanceTraveledX = this.prevX; //*****
+        this.game.Background.distanceTraveledY = this.prevY; //*****
+        
+
+    }
+
+
+
+
+
+
+
+
+    // var travelX = (this.speed) * Math.cos(Math.PI / 180 * this.angle); //********* */
+    // var travelY = (this.speed) * Math.sin(Math.PI / 180 * this.angle);
+    // this.x += travelX;
+    // this.y += travelY;
+
+    // this.prevOFFx = X_OFFSET; ////************ */
+    // this.prevOFFy = Y_OFFSET; ///************** */
+   
+    //     X_OFFSET += travelX; //****
+    //     Y_OFFSET += travelY; //*****
+    
+    
+
+    // this.prevX =  this.game.Background.distanceTraveledX;
+    // this.prevY =  this.game.Background.distanceTraveledY;
+    // this.game.Background.distanceTraveledX += travelX; //*****
+    // this.game.Background.distanceTraveledY += travelY; //*****
     
     Entity.prototype.update.call(this);
 }
@@ -521,7 +608,7 @@ Person.prototype.draw = function (ctx) {
         this.straightAnimation.drawFrame(this.game.clockTick, ctx, this.x - X_OFFSET, this.y - Y_OFFSET, this.angle);
     } else if (this.left && this.speed > 0) {
         this.straightAnimation.drawFrame(this.game.clockTick, ctx, this.x - X_OFFSET, this.y - Y_OFFSET, this.angle);
-    } else if (this.up) {
+    } else if (this.up ) {
         //this.straightAnimation.loop = true;
         this.straightAnimation.drawFrame(this.game.clockTick, ctx, this.x - X_OFFSET, this.y - Y_OFFSET, this.angle);
     } else {
@@ -687,9 +774,11 @@ Car.prototype.update = function (ctx) {
         if (this.game.d) {
             if (this.speed !== 0) {
                 if (this.speed > 0) {
-                    this.angle += 3;
+                    
+                    this.angle += 2.5;
                 } else {
-                    this.angle -= 3;
+                    
+                    this.angle -= 2.5;
                 }
                 //this.game.startsound.pause();
                 //this.game.driftsound.play();
@@ -700,9 +789,11 @@ Car.prototype.update = function (ctx) {
             if (this.speed !== 0) {
 
                 if (this.speed > 0) {
-                    this.angle -= 3;
+                    this.angle -= 2.5;
+                    
                 } else {
-                    this.angle += 3;
+                    this.angle += 2.5;
+                    
                 }
                 //this.game.startsound.pause();
                 //this.game.driftsound.play();
@@ -845,16 +936,11 @@ Car.prototype.draw = function (ctx) {
         if(this.game.s){
             this.game.s = false;
         }
-        // var travelX = (this.speed) * Math.cos(Math.PI / 180 * this.angle); //********* */
-        // var travelY = (this.speed) * Math.sin(Math.PI / 180 * this.angle);
-        console.log(this.game.person.it);
-        if(!this.game.person.it){
+        
+        if(!this.game.person.it || this.it){
             this.collide += 1; 
         }
-        // this.game.Background.distanceTraveledX += travelX; //*****
-        // this.game.Background.distanceTraveledY += travelY;
-        //  X_OFFSET += travelX; //****
-        //  Y_OFFSET += travelY;
+        
         this.game.Background.distanceTraveledX = this.prevX; //*****
         this.game.Background.distanceTraveledY = this.prevY; //*****
         //  this.game.Background.distanceTraveledX -= travelX; //*****
@@ -1090,6 +1176,11 @@ Entity.call(this, game);
 }
 Car2.prototype = new Entity();
 Car2.prototype.update = function () {
+    // if(this.game.person ===0 || this.game.car.speed ===0){
+    //     this.gameCoordX =  this.x2 + (PASSEDMAPS.LCount * 9217);
+    // this.gameCoordY = this.y2 + (PASSEDMAPS.HCount * 4502);
+    // }
+
     this.gameCoordX =  this.x2 + (PASSEDMAPS.LCount * 9217);
     this.gameCoordY = this.y2 + (PASSEDMAPS.HCount * 4502);
 }
