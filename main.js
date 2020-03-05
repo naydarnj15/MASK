@@ -382,7 +382,7 @@ PlayGame.prototype.draw = function (ctx) {
         ctx.fillStyle = "yellow";
         
         if (!this.game.car.foundLambo) {
-            ctx.fillText("Mission: Find the yellow lamborghini and bring it back to the starting location", this.x + 50, this.y - 300);
+            ctx.fillText("Mission: Find the yellow Corvette and bring it back to the starting location", this.x + 50, this.y - 300);
         } else if (this.game.car.missionComplete) {
             //console.log(this.game.car.missionComplete);
             ctx.fillText("You have completed the first mission, Hit enter to play again", this.x + 50, this.y - 200);
